@@ -1,0 +1,12 @@
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de preview offline (no necesarios en producción)
+index_preview.html
