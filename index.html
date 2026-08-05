@@ -38,7 +38,21 @@
             color: var(--color-text);
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
         }
+        body::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vh;
+    background: url('logo_white.png') center/contain no-repeat;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+}
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--color-bg); }
         ::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 4px; }
@@ -189,19 +203,6 @@
             padding: 8rem 2rem 4rem;
             overflow: hidden;
         }
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;
-    height: 500px;
-    background: url(logo_white.png) center / contain no-repeat;
-    opacity: 0.08;
-    pointer-events: none;
-    z-index: 0;
-}
         .hero::after {
             content: '';
             position: absolute;
