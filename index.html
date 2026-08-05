@@ -680,6 +680,68 @@
             transform: translateY(-5px);
             background: var(--color-text);
         }
+    /* Estilos de la Galería Modal */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background-color: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            max-width: 900px;
+            padding: 20px;
+        }
+        .album-slider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+        }
+        #albumImage {
+            max-height: 70vh;
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--color-border);
+        }
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: var(--color-text-muted);
+            font-size: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .close-modal:hover { color: var(--color-accent); }
+        .slider-btn {
+            background: transparent;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 0 20px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover { 
+            background: var(--color-accent); 
+            color: var(--color-bg); 
+        }
     </style>
 </head>
 <body>
@@ -787,13 +849,13 @@
 <div class="gallery-grid">
                 <!-- Portada Placares -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('placares')">
-                    <img src="placar.jpg" alt="Placares a medida">
+                    <img src="placar.png" alt="Placares a medida">
                     <div class="gallery-overlay"><span>Placares y Vestidores</span></div>
                 </div>
 
                 <!-- Portada Escritorios -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('escritorios')">
-                    <img src="escritorio_gamer.jpg" alt="Escritorios">
+                    <img src="escritorio_gamer.jpeg" alt="Escritorios">
                     <div class="gallery-overlay"><span>Escritorios y Oficinas</span></div>
                 </div>
 
@@ -925,6 +987,18 @@
 <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()" aria-label="Volver arriba">
         ↑
     </button>
+    <!-- Ventana Modal de la Galería -->
+    <div id="modalAlbum" class="modal">
+        <span class="close-modal" onclick="cerrarAlbum()">&times;</span>
+        <div class="modal-content">
+            <h3 id="albumTitle" style="font-family: var(--font-heading); color: var(--color-accent); margin-bottom: 15px; text-align: center; font-size: 2rem;"></h3>
+            <div class="album-slider">
+                <button class="slider-btn prev" onclick="cambiarFoto(-1)">&#10094;</button>
+                <img id="albumImage" src="" alt="Foto del álbum">
+                <button class="slider-btn next" onclick="cambiarFoto(1)">&#10095;</button>
+            </div>
+        </div>
+    </div>
     <footer>
         <div class="footer-logo">KAISS <span>Amoblamientos</span></div>
         <p>San Juan, Argentina · Muebles a medida en MDF · Más de 3 años de experiencia</p>
@@ -972,6 +1046,51 @@ window.addEventListener('scroll', () => {
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    // Lógica de los Álbumes de Fotos
+        const albums = {
+            placares: {
+                titulo: "Placares y Vestidores",
+                fotos: ["placar.png"]
+            },
+            escritorios: {
+                titulo: "Escritorios y Oficinas",
+                fotos: ["escritorio_gamer.jpeg", "escritorio_oficina.png"]
+            },
+            dormitorios: {
+                titulo: "Dormitorios y Respaldos",
+                fotos: ["dormitorio.jpg"]
+            },
+            racks: {
+                titulo: "Racks de TV",
+                fotos: ["rack.jpg"]
+            },
+            espejos: {
+                titulo: "Espejos (ME Reflejos)",
+                fotos: ["logo_watermark.png"] // Acá pondremos las fotos de los espejos luego
+            }
+        };
+
+        let albumActual = [];
+        let fotoIndex = 0;
+
+        function abrirAlbum(categoria) {
+            albumActual = albums[categoria].fotos;
+            fotoIndex = 0;
+            document.getElementById('albumTitle').innerText = albums[categoria].titulo;
+            document.getElementById('albumImage').src = albumActual[fotoIndex];
+            document.getElementById('modalAlbum').style.display = "block";
+        }
+
+        function cerrarAlbum() {
+            document.getElementById('modalAlbum').style.display = "none";
+        }
+
+        function cambiarFoto(direccion) {
+            fotoIndex += direccion;
+            if (fotoIndex >= albumActual.length) fotoIndex = 0; // Vuelve a la primera
+            if (fotoIndex < 0) fotoIndex = albumActual.length - 1; // Va a la última
+            document.getElementById('albumImage').src = albumActual[fotoIndex];
+        }
     </script>
 </body>
 </html>
