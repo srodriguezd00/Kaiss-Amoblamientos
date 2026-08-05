@@ -651,6 +651,35 @@
                 align-items: center;
             }
         }
+        .scroll-top {
+            position: fixed;
+            bottom: 30px; 
+            left: 30px; 
+            width: 50px; 
+            height: 50px;
+            background: var(--color-accent);
+            color: var(--color-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            background: var(--color-text);
+        }
     </style>
 </head>
 <body>
@@ -897,7 +926,9 @@
             </div>
         </div>
     </section>
-
+<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()" aria-label="Volver arriba">
+        ↑
+    </button>
     <footer>
         <div class="footer-logo">KAISS <span>Amoblamientos</span></div>
         <p>San Juan, Argentina · Muebles a medida en MDF · Más de 3 años de experiencia</p>
@@ -917,14 +948,26 @@
                 document.getElementById('navbar').classList.remove('active');
             });
         });
-        window.addEventListener('scroll', () => {
+window.addEventListener('scroll', () => {
             const header = document.getElementById('header');
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            
             if (window.scrollY > 50) {
                 header.style.background = 'rgba(10, 10, 10, 0.98)';
             } else {
                 header.style.background = 'rgba(10, 10, 10, 0.9)';
             }
+
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
         });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
