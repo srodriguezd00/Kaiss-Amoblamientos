@@ -1137,61 +1137,15 @@ window.addEventListener('scroll', () => {
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    // Lógica de los Álbumes de Fotos
-        const albums = {
-            Placards: {
-                titulo: "Placards y Vestidores",
-                fotos: ["placar.png"]
-            },
-            escritorios: {
-                titulo: "Escritorios y Oficinas",
-                fotos: ["escritorio_gamer.jpeg", "escritorio_oficina.png"]
-            },
-            dormitorios: {
-                titulo: "Dormitorios y Respaldos",
-                fotos: ["dormitorio.jpg"]
-            },
-            racks: {
-                titulo: "Racks de TV",
-                fotos: ["rack.jpg"]
-            },
-            espejos: {
-                titulo: "Espejos (ME Reflejos)",
-                fotos: ["logo_watermark.png"] // Acá pondremos las fotos de los espejos luego
-            }
-        };
-
-        let albumActual = [];
-        let fotoIndex = 0;
-
-        function abrirAlbum(categoria) {
-            albumActual = albums[categoria].fotos;
-            fotoIndex = 0;
-            document.getElementById('albumTitle').innerText = albums[categoria].titulo;
-            document.getElementById('albumImage').src = albumActual[fotoIndex];
-            document.getElementById('modalAlbum').style.display = "block";
-        }
-
-        function cerrarAlbum() {
-            document.getElementById('modalAlbum').style.display = "none";
-        }
-
-        function cambiarFoto(direccion) {
-            fotoIndex += direccion;
-            if (fotoIndex >= albumActual.length) fotoIndex = 0; // Vuelve a la primera
-            if (fotoIndex < 0) fotoIndex = albumActual.length - 1; // Va a la última
-            document.getElementById('albumImage').src = albumActual[fotoIndex];
-        }
-    // --- Lógica del Visor de Álbumes ---
+   // --- Lógica del Visor de Álbumes ---
         const albumes = {
             'vanitorys': [
                 'vanitory_moderno.png',
                 'vanitory_clasico.jpeg',
                 'vanitory_esquinero.jpeg'
             ],
-            // Dejamos armados los demás para cuando cambies las otras portadas
-            'Placards': ['placar.png', 'placar.jpg'],
-            'escritorios': ['escritorio_gamer.jpeg', 'escritorio_gamer.jpg', 'escritorio_oficina.png', 'escritorio_oficina.jpg'],
+            'Placards': ['placar.png'],
+            'escritorios': ['escritorio_gamer.jpeg', 'escritorio_oficina.png'],
             'dormitorios': ['dormitorio.jpg'],
             'racks': ['rack.jpg']
         };
