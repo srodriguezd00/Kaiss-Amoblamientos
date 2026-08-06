@@ -742,6 +742,81 @@
             background: var(--color-accent); 
             color: var(--color-bg); 
         }
+   /* --- Estilos del Visor de Álbumes --- */
+        .visor-oculto {
+            display: none !important;
+        }
+        .visor-activo {
+            display: flex !important;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(10, 10, 10, 0.95);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        .cerrar-visor {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10000;
+        }
+        .cerrar-visor:hover {
+            color: var(--color-accent);
+            transform: scale(1.1);
+        }
+        .visor-contenido {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #imagenVisor {
+            max-width: 100%;
+            max-height: 85vh;
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            object-fit: contain;
+        }
+        .visor-controles {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 20px;
+            box-sizing: border-box;
+            pointer-events: none; /* Deja clickear a traves del contenedor */
+        }
+        .visor-controles button {
+            background: rgba(26, 26, 26, 0.8);
+            color: var(--color-accent);
+            border: 1px solid var(--color-border);
+            padding: 15px 25px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 50%;
+            pointer-events: auto; /* Reactiva el click en los botones */
+        }
+        .visor-controles button:hover {
+            background: var(--color-accent);
+            color: var(--color-bg);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -864,6 +939,11 @@
                     <img src="dormitorio.jpg" alt="Dormitorios">
                     <div class="gallery-overlay"><span>Dormitorios y Respaldos</span></div>
                 </div>
+                <!-- Portada Vanitorys -->
+            <div class="gallery-item fade-in" onclick="abrirAlbum('vanitorys')">
+                <img src="vanitory_moderno.png" alt="Vanitorys a medida">
+                <div class="gallery-overlay"><span>Vanitorys</span></div>
+            </div>
 
                 <!-- Portada Racks -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('racks')">
@@ -999,6 +1079,17 @@
             </div>
         </div>
     </div>
+    <!-- Visor de Álbumes (Ventana emergente) -->
+    <div id="visorAlbum" class="visor-oculto">
+        <span class="cerrar-visor" onclick="cerrarAlbum()">&times;</span>
+        <div class="visor-contenido">
+            <img id="imagenVisor" src="" alt="Foto del álbum">
+            <div class="visor-controles">
+                <button onclick="cambiarFoto(-1)">&#10094;</button>
+                <button onclick="cambiarFoto(1)">&#10095;</button>
+            </div>
+        </div>
+    </div>
     <footer>
         <div class="footer-logo">KAISS <span>Amoblamientos</span></div>
         <p>San Juan, Argentina · Muebles a medida en MDF · Más de 3 años de experiencia</p>
@@ -1090,6 +1181,52 @@ window.addEventListener('scroll', () => {
             if (fotoIndex >= albumActual.length) fotoIndex = 0; // Vuelve a la primera
             if (fotoIndex < 0) fotoIndex = albumActual.length - 1; // Va a la última
             document.getElementById('albumImage').src = albumActual[fotoIndex];
+        }
+    // --- Lógica del Visor de Álbumes ---
+        const albumes = {
+            'vanitorys': [
+                'vanitory_moderno.png',
+                'vanitory_clasico.jpeg',
+                'vanitory_esquinero.jpeg'
+            ],
+            // Dejamos armados los demás para cuando cambies las otras portadas
+            'Placards': ['placar.png', 'placar.jpg'],
+            'escritorios': ['escritorio_gamer.jpeg', 'escritorio_gamer.jpg', 'escritorio_oficina.png', 'escritorio_oficina.jpg'],
+            'dormitorios': ['dormitorio.jpg'],
+            'racks': ['rack.jpg']
+        };
+
+        let albumActual = [];
+        let indiceFotoActual = 0;
+
+        function abrirAlbum(categoria) {
+            albumActual = albumes[categoria];
+            if (!albumActual || albumActual.length === 0) return;
+
+            indiceFotoActual = 0;
+            document.getElementById('imagenVisor').src = albumActual[indiceFotoActual];
+            
+            const visor = document.getElementById('visorAlbum');
+            visor.classList.remove('visor-oculto');
+            visor.classList.add('visor-activo');
+        }
+
+        function cerrarAlbum() {
+            const visor = document.getElementById('visorAlbum');
+            visor.classList.remove('visor-activo');
+            visor.classList.add('visor-oculto');
+        }
+
+        function cambiarFoto(direccion) {
+            indiceFotoActual += direccion;
+
+            if (indiceFotoActual >= albumActual.length) {
+                indiceFotoActual = 0;
+            } else if (indiceFotoActual < 0) {
+                indiceFotoActual = albumActual.length - 1;
+            }
+
+            document.getElementById('imagenVisor').src = albumActual[indiceFotoActual];
         }
     </script>
 </body>
