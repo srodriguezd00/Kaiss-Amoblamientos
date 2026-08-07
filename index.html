@@ -950,13 +950,6 @@
                     <img src="img/rack.jpg" alt="Racks de TV">
                     <div class="gallery-overlay"><span>Racks de TV</span></div>
                 </div>
-
-                <!-- Portada Espejos -->
-                <div class="gallery-item fade-in" onclick="abrirAlbum('espejos')">
-                    <!-- Nota: Cambiar "logo_watermark.png" por la foto de un espejo cuando la tengas -->
-                    <img src="img/logo_watermark.png" alt="Espejos ME Reflejos" style="object-fit: contain; background: #111;">
-                    <div class="gallery-overlay"><span>Espejos (ME Reflejos)</span></div>
-                </div>
             </div>
     </section>
 
@@ -1141,16 +1134,42 @@ window.addEventListener('scroll', () => {
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
    // --- Lógica del Visor de Álbumes ---
-        const albumes = {
+const albumes = {
             'vanitorys': [
-                'img/vanitory_moderno.png',
-                'img/vanitory_clasico.jpeg',
+                'img/IMG_9307.jpg',
+                'img/IMG_9705.jpg',
                 'img/vanitory_esquinero.jpeg'
             ],
-            'Placards': ['img/placar.png'],
-            'escritorios': ['img/escritorio_gamer.jpeg', 'img/escritorio_oficina.png'],
-            'dormitorios': ['img/dormitorio.jpg'],
-            'racks': ['img/rack.jpg']
+            'Placards': [
+                'img/IMG_9853.jpg',
+                'img/IMG_0625.jpg',
+                'img/IMG_0764.jpg',
+                'img/IMG_9110.jpg',
+                'img/IMG_0019.jpg',
+                'img/placar.png'
+            ],
+            'escritorios': [
+                'img/IMG_7685.mp4', 
+                'img/IMG_0691.jpg'
+            ],
+            'dormitorios': [
+                'img/IMG_0654.jpg',
+                'img/IMG_0655.jpg',
+                'img/IMG_9044.jpg',
+                'img/dormitorio.jpg'
+            ],
+            'racks': [
+                'img/IMG_6413.jpg',
+                'img/IMG_9163.jpg',
+                'img/IMG_0497.jpg',
+                'img/rack.jpg'
+            ],
+            'cocinas': [
+                'img/IMG_0442.jpg',
+                'img/IMG_9518.jpg',
+                'img/IMG_8397.jpg',
+                'img/IMG_8492.mp4'
+            ]
         };
 
         let albumActual = [];
