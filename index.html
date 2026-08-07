@@ -11,7 +11,7 @@
     <meta property="og:title" content="Kaiss Amoblamientos | Muebles a Medida en San Juan">
     <meta property="og:description" content="Diseños de muebles a medida en MDF. Visita técnica, diseño 3D y presupuesto sin cargo.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="logo.png">
+    <meta property="og:image" content="img/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -41,18 +41,18 @@
             position: relative;
         }
         body::before {
-    content: '';
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100vw;
-    height: 100vh;
-    background: url('logo_white.png') center/contain no-repeat;
-    opacity: 0.09;
-    pointer-events: none;
-    z-index: 0;
-}
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw;
+            height: 100vh;
+            background: url('img/logo_white.png') center/contain no-repeat;
+            opacity: 0.09;
+            pointer-events: none;
+            z-index: 0;
+        }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--color-bg); }
         ::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 4px; }
@@ -198,7 +198,7 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 500px; height: 500px;
-            background: url('logo_watermark.png') center/contain no-repeat;
+            background: url('img/logo_watermark.png') center/contain no-repeat;
             opacity: 0.15;
             pointer-events: none;
             z-index: 1;
@@ -525,7 +525,7 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 300px; height: 300px;
-            background: url('logo_watermark.png') center/contain no-repeat;
+            background: url('img/logo_watermark.png') center/contain no-repeat;
             opacity: 0.08;
             pointer-events: none;
             z-index: 0;
@@ -823,7 +823,7 @@
     <header id="header">
         <div class="header-container">
             <a href="#" class="logo">
-                <img src="logo_white.png" alt="Kaiss Amoblamientos Logo">
+                <img src="img/logo_white.png" alt="Kaiss Amoblamientos Logo">
                 <div class="logo-text">
                     KAISS
                     <span>Amoblamientos</span>
@@ -924,37 +924,37 @@
 <div class="gallery-grid">
                 <!-- Portada Placards -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('Placards')">
-                    <img src="placar.png" alt="Placards a medida">
+                    <img src="img/placar.png" alt="Placards a medida">
                     <div class="gallery-overlay"><span>Placards y Vestidores</span></div>
                 </div>
 
                 <!-- Portada Escritorios -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('escritorios')">
-                    <img src="escritorio_gamer.jpeg" alt="Escritorios">
+                    <img src="img/escritorio_gamer.jpeg" alt="Escritorios">
                     <div class="gallery-overlay"><span>Escritorios y Oficinas</span></div>
                 </div>
 
                 <!-- Portada Dormitorios -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('dormitorios')">
-                    <img src="dormitorio.jpg" alt="Dormitorios">
+                    <img src="img/dormitorio.jpg" alt="Dormitorios">
                     <div class="gallery-overlay"><span>Dormitorios y Respaldos</span></div>
                 </div>
                 <!-- Portada Vanitorys -->
             <div class="gallery-item fade-in" onclick="abrirAlbum('vanitorys')">
-                <img src="vanitory_moderno.png" alt="Vanitorys a medida">
+                <img src="img/vanitory_moderno.png" alt="Vanitorys a medida">
                 <div class="gallery-overlay"><span>Vanitorys</span></div>
             </div>
 
                 <!-- Portada Racks -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('racks')">
-                    <img src="rack.jpg" alt="Racks de TV">
+                    <img src="img/rack.jpg" alt="Racks de TV">
                     <div class="gallery-overlay"><span>Racks de TV</span></div>
                 </div>
 
                 <!-- Portada Espejos -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('espejos')">
                     <!-- Nota: Cambiar "logo_watermark.png" por la foto de un espejo cuando la tengas -->
-                    <img src="logo_watermark.png" alt="Espejos ME Reflejos" style="object-fit: contain; background: #111;">
+                    <img src="img/logo_watermark.png" alt="Espejos ME Reflejos" style="object-fit: contain; background: #111;">
                     <div class="gallery-overlay"><span>Espejos (ME Reflejos)</span></div>
                 </div>
             </div>
@@ -1029,7 +1029,7 @@
                     </div>
                 </div>
                 <div class="about-image fade-in">
-                    <img src="rack.jpg" alt="Trabajo de Kaiss Amoblamientos">
+                    <img src="img/rack.jpg" alt="Trabajo de Kaiss Amoblamientos">
                 </div>
             </div>
         </div>
@@ -1140,14 +1140,14 @@ window.addEventListener('scroll', () => {
    // --- Lógica del Visor de Álbumes ---
         const albumes = {
             'vanitorys': [
-                'vanitory_moderno.png',
-                'vanitory_clasico.jpeg',
-                'vanitory_esquinero.jpeg'
+                'img/vanitory_moderno.png',
+                'img/vanitory_clasico.jpeg',
+                'img/vanitory_esquinero.jpeg'
             ],
-            'Placards': ['placar.png'],
-            'escritorios': ['escritorio_gamer.jpeg', 'escritorio_oficina.png'],
-            'dormitorios': ['dormitorio.jpg'],
-            'racks': ['rack.jpg']
+            'Placards': ['img/placar.png'],
+            'escritorios': ['img/escritorio_gamer.jpeg', 'img/escritorio_oficina.png'],
+            'dormitorios': ['img/dormitorio.jpg'],
+            'racks': ['img/rack.jpg']
         };
 
         let albumActual = [];
@@ -1185,6 +1185,3 @@ window.addEventListener('scroll', () => {
     </script>
 </body>
 </html>
-
-
-
