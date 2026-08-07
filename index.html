@@ -12,9 +12,13 @@
     <meta property="og:description" content="Diseños de muebles a medida en MDF. Visita técnica, diseño 3D y presupuesto sin cargo.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="img/logo.png">
+    
+    <!-- Optimizaciones de Precarga -->
+    <link rel="preload" href="img/logo_white.png" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --color-bg: #0a0a0a;
@@ -56,15 +60,16 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--color-bg); }
         ::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 4px; }
-header {
-            position: fixed ;
+        
+        header {
+            position: fixed;
             top: 0; 
             left: 0;
             width: 100%;
-            z-index: 9999; /* Lo elevamos al máximo para que nada lo tape */
-            background:rgba(10, 10, 10, 0.95);
+            z-index: 9999;
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); /* Soporte extra para algunos navegadores */
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--color-border);
             transition: var(--transition);
         }
@@ -625,7 +630,7 @@ header {
             opacity: 1;
             transform: translateY(0);
         }
-@media (max-width: 768px) {
+        @media (max-width: 768px) {
             /* Cabecera y Menú */
             .header-container { padding: 1rem; }
             .logo-text { font-size: 1.2rem; }
@@ -671,21 +676,7 @@ header {
             .visor-controles button { padding: 10px 15px; font-size: 18px; }
             #imagenVisor, #videoVisor { max-height: 70vh; }
         }
-            nav.active { right: 0; }
-            .hero { padding-top: 6rem; }
-            .hero-stats { gap: 2rem; }
-            .about-grid { grid-template-columns: 1fr; }
-            .about-image { order: -1; }
-            .process-steps::before { display: none; }
-            .step { min-width: 100%; }
-            .gallery-item:nth-child(1),
-            .gallery-item:nth-child(4),
-            .gallery-item:nth-child(7) { grid-row: span 1; }
-            .contact-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
+        
         .scroll-top {
             position: fixed;
             bottom: 30px; 
@@ -824,7 +815,6 @@ header {
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             object-fit: contain;
-            /* Filtro comercial: mejora exposición y resalta materiales */
             filter: contrast(1.08) saturate(1.15) brightness(1.03);
         }
         .visor-controles {
@@ -961,37 +951,37 @@ header {
             <div class="gallery-grid">
                 <!-- Portada Placards -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('Placards')">
-                    <img src="img/placar.png" alt="Placards a medida">
+                    <img src="img/placar.png" alt="Placards a medida" loading="lazy">
                     <div class="gallery-overlay"><span>Placards y Vestidores</span></div>
                 </div>
 
-<!-- Portada Escritorios -->
+                <!-- Portada Escritorios -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('escritorios')">
-                    <img src="img/IMG_0691.jpeg" alt="Escritorios">
+                    <img src="img/IMG_0691.jpeg" alt="Escritorios" loading="lazy">
                     <div class="gallery-overlay"><span>Escritorios y Oficinas</span></div>
                 </div>
 
                 <!-- Portada Dormitorios -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('dormitorios')">
-                    <img src="img/dormitorio.jpg" alt="Dormitorios">
+                    <img src="img/dormitorio.jpg" alt="Dormitorios" loading="lazy">
                     <div class="gallery-overlay"><span>Dormitorios y Respaldos</span></div>
                 </div>
 
                 <!-- Portada Vanitorys -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('vanitorys')">
-                    <img src="img/vanitory_esquinero.jpeg" alt="Vanitorys a medida">
+                    <img src="img/vanitory_esquinero.jpeg" alt="Vanitorys a medida" loading="lazy">
                     <div class="gallery-overlay"><span>Vanitorys</span></div>
                 </div>
 
                 <!-- Portada Racks -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('racks')">
-                    <img src="img/rack.jpg" alt="Racks de TV">
+                    <img src="img/rack.jpg" alt="Racks de TV" loading="lazy">
                     <div class="gallery-overlay"><span>Racks de TV</span></div>
                 </div>
 
-                <!-- Portada Cocinas (Agregada para que aparezca en la web) -->
+                <!-- Portada Cocinas -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('cocinas')">
-                    <img src="img/IMG_0442.JPG" alt="Cocinas a medida">
+                    <img src="img/IMG_0442.JPG" alt="Cocinas a medida" loading="lazy">
                     <div class="gallery-overlay"><span>Cocinas y Bajo Mesadas</span></div>
                 </div>
             </div>
@@ -1067,7 +1057,7 @@ header {
                     </div>
                 </div>
                 <div class="about-image fade-in">
-                    <img src="img/rack.jpg" alt="Trabajo de Kaiss Amoblamientos">
+                    <img src="img/rack.jpg" alt="Trabajo de Kaiss Amoblamientos" loading="lazy">
                 </div>
             </div>
         </div>
@@ -1112,7 +1102,7 @@ header {
         <span class="cerrar-visor" onclick="cerrarAlbum()">&times;</span>
         <div class="visor-contenido">
             <img id="imagenVisor" src="" alt="Foto del álbum">
-            <video id="videoVisor" src="" loop muted playsinline style="display: none;"></video>
+            <video id="videoVisor" src="" loop muted playsinline preload="metadata" style="display: none;"></video>
             
             <div class="visor-controles">
                 <button onclick="cambiarFoto(-1)">&#10094;</button>
@@ -1135,11 +1125,14 @@ header {
         function toggleMenu() {
             document.getElementById('navbar').classList.toggle('active');
         }
+        
+        // Cierra el menú móvil al tocar un link
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('navbar').classList.remove('active');
             });
         });
+        
         window.addEventListener('scroll', () => {
             const header = document.getElementById('header');
             const scrollTopBtn = document.getElementById('scrollTopBtn');
@@ -1260,6 +1253,7 @@ header {
 
             actualizarVisor();
         }
+        
         // --- Navegación con Teclado (Flechas y Escape) ---
         document.addEventListener('keydown', function(event) {
             const visor = document.getElementById('visorAlbum');
@@ -1300,7 +1294,5 @@ header {
             });
         }, 3500);
     </script>
-
-
 </body>
 </html>
