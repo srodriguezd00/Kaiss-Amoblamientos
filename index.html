@@ -57,12 +57,12 @@
         ::-webkit-scrollbar-track { background: var(--color-bg); }
         ::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 4px; }
 header {
-            position: fixed;
+            position: fixed !important;
             top: 0; 
             left: 0;
             width: 100%;
             z-index: 9999; /* Lo elevamos al máximo para que nada lo tape */
-            background: rgba(10, 10, 10, 0.95);
+            background:rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px); /* Soporte extra para algunos navegadores */
             border-bottom: 1px solid var(--color-border);
