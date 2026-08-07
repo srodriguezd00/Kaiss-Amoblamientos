@@ -1208,6 +1208,35 @@ function actualizarVisor() {
 
             actualizarVisor();
         }
+        // --- Carrusel Automático para las Portadas ---
+        setInterval(() => {
+            const items = document.querySelectorAll('.gallery-item');
+            
+            items.forEach(item => {
+                const onclickAttr = item.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes('abrirAlbum')) {
+                    // Extraemos el nombre de la categoría del botón (ej: 'vanitorys')
+                    const categoria = onclickAttr.split("'")[1] || onclickAttr.split('"')[1];
+                    
+                    if (albumes[categoria] && albumes[categoria].length > 1) {
+                        // Filtramos para asegurarnos de mostrar solo fotos en la portada (ignora los videos .mp4)
+                        const fotos = albumes[categoria].filter(ruta => !ruta.toLowerCase().endsWith('.mp4'));
+                        
+                        if (fotos.length > 1) {
+                            const imgElement = item.querySelector('img');
+                            let fotoActual = imgElement.getAttribute('src');
+                            let indice = fotos.indexOf(fotoActual);
+                            
+                            // Calculamos la foto que sigue
+                            let siguienteIndice = (indice + 1) % fotos.length;
+                            
+                            // Aplicamos el cambio de imagen
+                            imgElement.src = fotos[siguienteIndice];
+                        }
+                    }
+                }
+            });
+        }, 3500); // 3500 milisegundos = cambia de foto cada 3.5 segundos
     </script>
 </body>
 </html>
