@@ -1079,11 +1079,14 @@
             </div>
         </div>
     </div>
-    <!-- Visor de Álbumes (Ventana emergente) -->
+<!-- Visor de Álbumes (Ventana emergente) -->
     <div id="visorAlbum" class="visor-oculto">
         <span class="cerrar-visor" onclick="cerrarAlbum()">&times;</span>
         <div class="visor-contenido">
+            <!-- Agregamos las dos opciones: imagen y video -->
             <img id="imagenVisor" src="" alt="Foto del álbum">
+            <video id="videoVisor" src="" controls style="display: none; max-width: 100%; max-height: 85vh; border: 2px solid var(--color-border); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);"></video>
+            
             <div class="visor-controles">
                 <button onclick="cambiarFoto(-1)">&#10094;</button>
                 <button onclick="cambiarFoto(1)">&#10095;</button>
@@ -1153,12 +1156,32 @@ window.addEventListener('scroll', () => {
         let albumActual = [];
         let indiceFotoActual = 0;
 
+function actualizarVisor() {
+            const ruta = albumActual[indiceFotoActual];
+            const imgEl = document.getElementById('imagenVisor');
+            const vidEl = document.getElementById('videoVisor');
+
+            // Si el archivo termina en .mp4, mostramos el video y ocultamos la foto
+            if (ruta.toLowerCase().endsWith('.mp4')) {
+                imgEl.style.display = 'none';
+                vidEl.style.display = 'block';
+                vidEl.src = ruta;
+                vidEl.play(); // El video arranca solo
+            } else {
+                // Si es foto, ocultamos y pausamos el video, mostramos la foto
+                vidEl.style.display = 'none';
+                vidEl.pause();
+                imgEl.style.display = 'block';
+                imgEl.src = ruta;
+            }
+        }
+
         function abrirAlbum(categoria) {
             albumActual = albumes[categoria];
             if (!albumActual || albumActual.length === 0) return;
 
             indiceFotoActual = 0;
-            document.getElementById('imagenVisor').src = albumActual[indiceFotoActual];
+            actualizarVisor();
             
             const visor = document.getElementById('visorAlbum');
             visor.classList.remove('visor-oculto');
@@ -1169,6 +1192,9 @@ window.addEventListener('scroll', () => {
             const visor = document.getElementById('visorAlbum');
             visor.classList.remove('visor-activo');
             visor.classList.add('visor-oculto');
+            
+            // Pausar video si estaba reproduciéndose al cerrar
+            document.getElementById('videoVisor').pause();
         }
 
         function cambiarFoto(direccion) {
@@ -1180,7 +1206,7 @@ window.addEventListener('scroll', () => {
                 indiceFotoActual = albumActual.length - 1;
             }
 
-            document.getElementById('imagenVisor').src = albumActual[indiceFotoActual];
+            actualizarVisor();
         }
     </script>
 </body>
