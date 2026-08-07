@@ -1227,6 +1227,21 @@ header {
 
             actualizarVisor();
         }
+        // --- Navegación con Teclado (Flechas y Escape) ---
+        document.addEventListener('keydown', function(event) {
+            const visor = document.getElementById('visorAlbum');
+            
+            // Solo prestamos atención a las teclas si el álbum está abierto
+            if (visor.classList.contains('visor-activo')) {
+                if (event.key === 'Escape') {
+                    cerrarAlbum();
+                } else if (event.key === 'ArrowRight') {
+                    cambiarFoto(1);
+                } else if (event.key === 'ArrowLeft') {
+                    cambiarFoto(-1);
+                }
+            }
+        });
 
         // --- Carrusel Automático para las Portadas ---
         setInterval(() => {
