@@ -625,7 +625,10 @@ header {
             opacity: 1;
             transform: translateY(0);
         }
-        @media (max-width: 768px) {
+@media (max-width: 768px) {
+            /* Cabecera y Menú */
+            .header-container { padding: 1rem; }
+            .logo-text { font-size: 1.2rem; }
             .menu-toggle { display: flex; }
             nav {
                 position: fixed;
@@ -637,7 +640,37 @@ header {
                 padding: 2rem;
                 transition: var(--transition);
                 border-left: 1px solid var(--color-border);
+                overflow-y: auto;
             }
+            nav.active { right: 0; }
+            
+            /* Ajustes Generales de Secciones */
+            .hero { padding-top: 8rem; }
+            .hero-stats { gap: 2rem; flex-direction: column; align-items: center; }
+            section { padding: 4rem 1.5rem; }
+            
+            /* Grillas */
+            .about-grid, .services-grid { grid-template-columns: 1fr; }
+            .about-image { order: -1; }
+            .process-steps { flex-direction: column; gap: 3rem; }
+            .process-steps::before { display: none; }
+            .step { min-width: 100%; }
+            
+            /* Galería de Trabajos */
+            .gallery-item:nth-child(1),
+            .gallery-item:nth-child(4),
+            .gallery-item:nth-child(7) { grid-row: span 1; }
+            
+            /* Botones y Contacto */
+            .contact-buttons { flex-direction: column; align-items: center; width: 100%; gap: 1rem; }
+            .contact-buttons a { width: 100%; justify-content: center; }
+            
+            /* Visor Modal de Fotos y Videos */
+            .cerrar-visor { top: 15px; right: 20px; font-size: 40px; }
+            .visor-controles { padding: 0 5px; }
+            .visor-controles button { padding: 10px 15px; font-size: 18px; }
+            #imagenVisor, #videoVisor { max-height: 70vh; }
+        }
             nav.active { right: 0; }
             .hero { padding-top: 6rem; }
             .hero-stats { gap: 2rem; }
