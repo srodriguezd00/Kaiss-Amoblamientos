@@ -782,13 +782,15 @@
             justify-content: center;
             align-items: center;
         }
-        #imagenVisor {
+        #imagenVisor, #videoVisor {
             max-width: 100%;
             max-height: 85vh;
             border: 2px solid var(--color-border);
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             object-fit: contain;
+            /* Filtro comercial: mejora exposición y resalta materiales */
+            filter: contrast(1.08) saturate(1.15) brightness(1.03);
         }
         .visor-controles {
             position: absolute;
@@ -799,7 +801,7 @@
             transform: translateY(-50%);
             padding: 0 20px;
             box-sizing: border-box;
-            pointer-events: none; /* Deja clickear a traves del contenedor */
+            pointer-events: none;
         }
         .visor-controles button {
             background: rgba(26, 26, 26, 0.8);
@@ -810,7 +812,7 @@
             cursor: pointer;
             transition: var(--transition);
             border-radius: 50%;
-            pointer-events: auto; /* Reactiva el click en los botones */
+            pointer-events: auto;
         }
         .visor-controles button:hover {
             background: var(--color-accent);
@@ -849,7 +851,7 @@
             <h1 class="fade-in">Diseños de muebles <span class="accent">a medida</span> en MDF</h1>
             <p class="fade-in">Más de 3 años transformando espacios con amoblamientos personalizados. Visita técnica, diseño 3D y presupuesto sin cargo.</p>
             <div class="hero-buttons fade-in">
-<a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustaría%20hacer%20una%20consulta" target="_blank" class="btn-primary">
+                <a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustaría%20hacer%20una%20consulta" target="_blank" class="btn-primary">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     Pedir Presupuesto
                 </a>
@@ -921,7 +923,7 @@
                 <div class="divider"></div>
                 <p>Cada proyecto es único. Estos son algunos de los amoblamientos que diseñamos y fabricamos.</p>
             </div>
-<div class="gallery-grid">
+            <div class="gallery-grid">
                 <!-- Portada Placards -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('Placards')">
                     <img src="img/placar.png" alt="Placards a medida">
@@ -939,18 +941,26 @@
                     <img src="img/dormitorio.jpg" alt="Dormitorios">
                     <div class="gallery-overlay"><span>Dormitorios y Respaldos</span></div>
                 </div>
+
                 <!-- Portada Vanitorys -->
-            <div class="gallery-item fade-in" onclick="abrirAlbum('vanitorys')">
-                <img src="img/vanitory_moderno.png" alt="Vanitorys a medida">
-                <div class="gallery-overlay"><span>Vanitorys</span></div>
-            </div>
+                <div class="gallery-item fade-in" onclick="abrirAlbum('vanitorys')">
+                    <img src="img/vanitory_moderno.png" alt="Vanitorys a medida">
+                    <div class="gallery-overlay"><span>Vanitorys</span></div>
+                </div>
 
                 <!-- Portada Racks -->
                 <div class="gallery-item fade-in" onclick="abrirAlbum('racks')">
                     <img src="img/rack.jpg" alt="Racks de TV">
                     <div class="gallery-overlay"><span>Racks de TV</span></div>
                 </div>
+
+                <!-- Portada Cocinas (Agregada para que aparezca en la web) -->
+                <div class="gallery-item fade-in" onclick="abrirAlbum('cocinas')">
+                    <img src="img/IMG_0442.JPG" alt="Cocinas a medida">
+                    <div class="gallery-overlay"><span>Cocinas y Bajo Mesadas</span></div>
+                </div>
             </div>
+        </div>
     </section>
 
     <section class="process" id="proceso">
@@ -981,11 +991,11 @@
                     <h3>Fabricación</h3>
                     <p>Construimos tu mueble en MDF con terminaciones de calidad y atención al detalle.</p>
                 </div>
-<div class="step fade-in">
-                 <div class="step-number">05</div>
-                 <h3>Instalación</h3>
-                 <p>Llevamos el amoblamiento a tu domicilio y nos encargamos del montaje final, cuidando cada detalle para que quede perfecto y listo para usar.</p>
-             </div>
+                <div class="step fade-in">
+                    <div class="step-number">05</div>
+                    <h3>Instalación</h3>
+                    <p>Llevamos el amoblamiento a tu domicilio y nos encargamos del montaje final, cuidando cada detalle.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -1033,7 +1043,7 @@
             <div class="contact-box fade-in">
                 <h2>¿Listo para transformar tu espacio?</h2>
                 <p>Contactanos por WhatsApp o Instagram y empezá hoy mismo con el diseño de tus muebles a medida. Atendemos San Juan y alrededores.</p>
-<div class="contact-buttons">
+                <div class="contact-buttons">
                     <a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustaría%20hacer%20una%20consulta" target="_blank" class="btn-primary">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                         Escribir por WhatsApp
@@ -1057,28 +1067,17 @@
             </div>
         </div>
     </section>
-<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()" aria-label="Volver arriba">
+
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()" aria-label="Volver arriba">
         ↑
     </button>
-    <!-- Ventana Modal de la Galería -->
-    <div id="modalAlbum" class="modal">
-        <span class="close-modal" onclick="cerrarAlbum()">&times;</span>
-        <div class="modal-content">
-            <h3 id="albumTitle" style="font-family: var(--font-heading); color: var(--color-accent); margin-bottom: 15px; text-align: center; font-size: 2rem;"></h3>
-            <div class="album-slider">
-                <button class="slider-btn prev" onclick="cambiarFoto(-1)">&#10094;</button>
-                <img id="albumImage" src="" alt="Foto del álbum">
-                <button class="slider-btn next" onclick="cambiarFoto(1)">&#10095;</button>
-            </div>
-        </div>
-    </div>
-<!-- Visor de Álbumes (Ventana emergente) -->
+
+    <!-- Visor de Álbumes (Ventana emergente) -->
     <div id="visorAlbum" class="visor-oculto">
         <span class="cerrar-visor" onclick="cerrarAlbum()">&times;</span>
         <div class="visor-contenido">
-            <!-- Agregamos las dos opciones: imagen y video -->
             <img id="imagenVisor" src="" alt="Foto del álbum">
-            <video id="videoVisor" src="" controls style="display: none; max-width: 100%; max-height: 85vh; border: 2px solid var(--color-border); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);"></video>
+            <video id="videoVisor" src="" controls style="display: none;"></video>
             
             <div class="visor-controles">
                 <button onclick="cambiarFoto(-1)">&#10094;</button>
@@ -1086,6 +1085,7 @@
             </div>
         </div>
     </div>
+
     <footer>
         <div class="footer-logo">KAISS <span>Amoblamientos</span></div>
         <p>San Juan, Argentina · Muebles a medida en MDF · Más de 3 años de experiencia</p>
@@ -1105,7 +1105,7 @@
                 document.getElementById('navbar').classList.remove('active');
             });
         });
-window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', () => {
             const header = document.getElementById('header');
             const scrollTopBtn = document.getElementById('scrollTopBtn');
             
@@ -1125,6 +1125,7 @@ window.addEventListener('scroll', () => {
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1133,8 +1134,9 @@ window.addEventListener('scroll', () => {
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-   // --- Lógica del Visor de Álbumes ---
-const albumes = {
+
+        // --- Lógica del Visor de Álbumes ---
+        const albumes = {
             'vanitorys': [
                 'img/IMG_9307.JPG',
                 'img/IMG_9705.JPG',
@@ -1175,19 +1177,17 @@ const albumes = {
         let albumActual = [];
         let indiceFotoActual = 0;
 
-function actualizarVisor() {
+        function actualizarVisor() {
             const ruta = albumActual[indiceFotoActual];
             const imgEl = document.getElementById('imagenVisor');
             const vidEl = document.getElementById('videoVisor');
 
-            // Si el archivo termina en .mp4, mostramos el video y ocultamos la foto
             if (ruta.toLowerCase().endsWith('.mp4')) {
                 imgEl.style.display = 'none';
                 vidEl.style.display = 'block';
                 vidEl.src = ruta;
-                vidEl.play(); // El video arranca solo
+                vidEl.play();
             } else {
-                // Si es foto, ocultamos y pausamos el video, mostramos la foto
                 vidEl.style.display = 'none';
                 vidEl.pause();
                 imgEl.style.display = 'block';
@@ -1211,8 +1211,6 @@ function actualizarVisor() {
             const visor = document.getElementById('visorAlbum');
             visor.classList.remove('visor-activo');
             visor.classList.add('visor-oculto');
-            
-            // Pausar video si estaba reproduciéndose al cerrar
             document.getElementById('videoVisor').pause();
         }
 
@@ -1227,6 +1225,7 @@ function actualizarVisor() {
 
             actualizarVisor();
         }
+
         // --- Carrusel Automático para las Portadas ---
         setInterval(() => {
             const items = document.querySelectorAll('.gallery-item');
@@ -1234,29 +1233,22 @@ function actualizarVisor() {
             items.forEach(item => {
                 const onclickAttr = item.getAttribute('onclick');
                 if (onclickAttr && onclickAttr.includes('abrirAlbum')) {
-                    // Extraemos el nombre de la categoría del botón (ej: 'vanitorys')
                     const categoria = onclickAttr.split("'")[1] || onclickAttr.split('"')[1];
                     
                     if (albumes[categoria] && albumes[categoria].length > 1) {
-                        // Filtramos para asegurarnos de mostrar solo fotos en la portada (ignora los videos .mp4)
                         const fotos = albumes[categoria].filter(ruta => !ruta.toLowerCase().endsWith('.mp4'));
                         
                         if (fotos.length > 1) {
                             const imgElement = item.querySelector('img');
                             let fotoActual = imgElement.getAttribute('src');
                             let indice = fotos.indexOf(fotoActual);
-                            
-                            // Calculamos la foto que sigue
                             let siguienteIndice = (indice + 1) % fotos.length;
-                            
-                            // Aplicamos el cambio de imagen
                             imgElement.src = fotos[siguienteIndice];
                         }
                     }
                 }
             });
-        }, 3500); // 3500 milisegundos = cambia de foto cada 3.5 segundos
+        }, 3500);
     </script>
-    
 </body>
 </html>
