@@ -128,25 +128,10 @@
             min-height: var(--header-h);
             gap: 1rem;
         }
-        .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-        .logo img { height: 34px; width: 34px; border-radius: 9px; }
-        .logo-text {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-text);
-            letter-spacing: 2px;
-            line-height: 1.1;
-        }
-        .logo-text span {
-            color: var(--color-accent);
-            font-size: 0.7rem;
-            display: block;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-family: var(--font-body);
-            font-weight: 400;
-        }
+        /* El logo de marca es una imagen horizontal (2,14:1). Se fija el alto y
+           el ancho se calcula solo, para que no se deforme en ningun tamaño. */
+        .logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+        .logo img { height: 40px; width: auto; display: block; }
         nav { display: flex; gap: 1.75rem; align-items: center; }
         nav a {
             color: var(--color-text-muted);
@@ -319,7 +304,15 @@
             letter-spacing: 1px;
             margin-top: 0.5rem;
         }
-        .hero-media { position: relative; }
+        /* El marco dorado va corrido hacia abajo y a la derecha. Se reserva ese
+           espacio con padding dentro de la columna: asi el bloque entero queda
+           alineado a la grilla en vez de sobresalir contra el borde de la
+           pantalla. El ::after ocupa exactamente el area de la imagen, corrida. */
+        .hero-media {
+            position: relative;
+            --marco: 18px;
+            padding: 0 var(--marco) var(--marco) 0;
+        }
         .hero-media img {
             width: 100%;
             height: auto;
@@ -332,10 +325,9 @@
         .hero-media::after {
             content: '';
             position: absolute;
-            inset: 0;
+            inset: var(--marco) 0 0 var(--marco);
             border: 2px solid var(--color-accent);
             border-radius: 20px;
-            transform: translate(18px, 18px);
             z-index: 0;
         }
 
@@ -580,7 +572,13 @@
             color: var(--color-accent);
             flex-shrink: 0;
         }
-        .about-image { position: relative; }
+        /* Mismo marco corrido que en el hero, con el espacio reservado dentro
+           de la columna para no romper la alineacion con la grilla. */
+        .about-image {
+            position: relative;
+            --marco: 15px;
+            padding: 0 var(--marco) var(--marco) 0;
+        }
         .about-image img {
             width: 100%; height: auto;
             display: block;
@@ -592,10 +590,9 @@
         .about-image::after {
             content: '';
             position: absolute;
-            inset: 0;
+            inset: var(--marco) 0 0 var(--marco);
             border: 2px solid var(--color-accent);
             border-radius: 16px;
-            transform: translate(15px, 15px);
             z-index: 0;
         }
 
@@ -721,6 +718,89 @@
         .field.invalid input, .field.invalid select { border-color: #ff9b9b; }
         .field.invalid .field-error { display: block; }
 
+        /* ---------- Adjuntar fotos ----------
+           El input de archivos real se saca de la vista pero sigue existiendo:
+           asi conserva el foco de teclado y la etiqueta lo activa sola. La caja
+           punteada visible es su <label>. */
+        .field input.file-input {
+            position: absolute;
+            width: 1px; height: 1px; min-height: 0;
+            padding: 0; margin: 0; border: 0;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+        .field label.dropzone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            margin: 0;
+            padding: 1.4rem 1rem;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: normal;
+            text-transform: none;
+            border: 1px dashed #3a3a3a;
+            border-radius: 10px;
+            background: var(--color-bg);
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: border-color var(--transition), background var(--transition), color var(--transition);
+        }
+        .field label.dropzone:hover,
+        .field label.dropzone.encima {
+            border-color: var(--color-accent);
+            background: #0d0d0d;
+            color: var(--color-text);
+        }
+        .file-input:focus-visible + .dropzone {
+            border-color: var(--color-accent);
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+        .dropzone svg { color: var(--color-accent); }
+        .dz-titulo { font-weight: 600; color: var(--color-text); font-size: 0.95rem; }
+        .dz-sub { font-size: 0.8rem; }
+
+        .fotos-lista {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 0.75rem 0 0;
+            padding: 0;
+        }
+        .fotos-lista:empty { display: none; }
+        .foto-item {
+            position: relative;
+            width: 76px; height: 76px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+        .foto-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .foto-quitar {
+            position: absolute;
+            top: 3px; right: 3px;
+            width: 23px; height: 23px;
+            display: grid; place-items: center;
+            padding: 0; border: 0; border-radius: 50%;
+            background: rgba(0, 0, 0, 0.72);
+            color: #fff;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+        .foto-quitar:hover { background: #c0392b; }
+        .fotos-aviso {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin: 0.55rem 0 0;
+            line-height: 1.5;
+        }
+        .fotos-aviso:empty { display: none; }
+        .fotos-aviso.alerta { color: #f0c07a; }
+
         /* ---------- Contacto ---------- */
         .contact { background: var(--color-bg-alt); text-align: center; }
         .contact-box {
@@ -783,8 +863,7 @@
             grid-template-columns: 1.4fr 1fr 1fr;
             gap: 2.5rem;
         }
-        .footer-logo { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.75rem; }
-        .footer-logo span { color: var(--color-accent); }
+        .footer-logo { height: 46px; width: auto; display: block; margin-bottom: 1rem; }
         .footer-grid p, .footer-grid li { color: var(--color-text-muted); font-size: 0.9rem; }
         .footer-grid a { color: var(--color-text-muted); text-decoration: none; transition: color var(--transition); }
         .footer-grid a:hover { color: var(--color-accent); }
@@ -953,7 +1032,7 @@
         }
         @media (max-width: 768px) {
             .header-container { padding: 0.75rem 1.25rem; }
-            .logo-text { font-size: 1.25rem; }
+            .logo img { height: 32px; }
             .menu-toggle { display: flex; }
             nav {
                 position: fixed;
@@ -1110,8 +1189,7 @@
     <header id="header">
         <div class="header-container">
             <a href="#inicio" class="logo" aria-label="Kaiss Amoblamientos, ir al inicio">
-                <img src="img/icon-192.png" alt="" width="34" height="34">
-                <span class="logo-text">KAISS<span>Amoblamientos</span></span>
+                <img src="img/logo-kaiss-blanco.png" alt="Kaiss Amoblamientos" width="342" height="160">
             </a>
             <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navbar">
                 <span></span><span></span><span></span>
@@ -1441,7 +1519,19 @@
 
                     <div class="field">
                         <label for="q-detalle">Contanos un poco más <span class="opt">(opcional)</span></label>
-                        <textarea id="q-detalle" name="detalle" placeholder="Color, estilo, si ya tenés una idea o una foto de referencia…"></textarea>
+                        <textarea id="q-detalle" name="detalle" placeholder="Color, estilo, si ya tenés una idea en mente…"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="q-fotos">Fotos del espacio <span class="opt">(opcional, hasta 4)</span></label>
+                        <input type="file" id="q-fotos" name="fotos" accept="image/*" multiple class="file-input">
+                        <label class="dropzone" for="q-fotos" id="dropzone">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-4.5-4.5L7 21"/></svg>
+                            <span class="dz-titulo">Elegí las fotos del lugar</span>
+                            <span class="dz-sub">o arrastralas acá — nos ayuda a presupuestar mejor</span>
+                        </label>
+                        <ul class="fotos-lista" id="fotosLista"></ul>
+                        <p class="fotos-aviso" id="fotosAviso" role="status"></p>
                     </div>
 
                     <button type="submit" class="btn-primary btn-wa">
@@ -1508,7 +1598,7 @@
     <footer>
         <div class="footer-grid">
             <div>
-                <p class="footer-logo">KAISS <span>Amoblamientos</span></p>
+                <img class="footer-logo" src="img/logo-kaiss-blanco.png" alt="Kaiss Amoblamientos" width="342" height="160" loading="lazy">
                 <p>Diseño y fabricación de muebles a medida en MDF. San Juan, Argentina. Más de 3 años de experiencia.</p>
             </div>
             <div>
@@ -1868,6 +1958,151 @@
         if (cont) cont.classList.toggle('invalid', malo);
     }
 
+    /* ---------------- Fotos adjuntas ----------------
+       Un enlace wa.me solo puede llevar texto: WhatsApp no acepta archivos por
+       URL. La unica via para mandar el mensaje y las fotos juntos, sin
+       servidor, es la Web Share API, que existe en practicamente todos los
+       celulares. Donde no este, se manda el texto igual y se avisa que las
+       fotos hay que adjuntarlas a mano: la consulta nunca se pierde.
+
+       Las fotos se achican al elegirlas y no al enviar, porque
+       navigator.share() solo corre dentro del gesto del usuario y comprimir
+       en ese momento romperia esa condicion. De paso, una foto de celular
+       pasa de varios MB a unos cientos de KB y el envio no falla. */
+    var MAX_FOTOS = 4;
+    var LADO_MAX  = 1600;
+    var CALIDAD   = 0.82;
+
+    var inputFotos = document.getElementById('q-fotos');
+    var listaFotos = document.getElementById('fotosLista');
+    var avisoFotos = document.getElementById('fotosAviso');
+    var zonaFotos  = document.getElementById('dropzone');
+    var fotos = [];
+
+    function avisar(texto, alerta) {
+        avisoFotos.textContent = texto || '';
+        avisoFotos.classList.toggle('alerta', !!alerta);
+    }
+
+    function resumenFotos() {
+        return fotos.length === 1 ? '1 foto lista para enviar.'
+                                  : fotos.length + ' fotos listas para enviar.';
+    }
+
+    function achicar(archivo) {
+        return new Promise(function (listo) {
+            var url = URL.createObjectURL(archivo);
+            var img = new Image();
+            img.onload = function () {
+                var escala = Math.min(1, LADO_MAX / Math.max(img.width, img.height));
+                var lienzo = document.createElement('canvas');
+                lienzo.width  = Math.round(img.width  * escala);
+                lienzo.height = Math.round(img.height * escala);
+                lienzo.getContext('2d').drawImage(img, 0, 0, lienzo.width, lienzo.height);
+                URL.revokeObjectURL(url);
+                lienzo.toBlob(function (blob) {
+                    if (!blob) { listo(archivo); return; }
+                    listo(new File([blob], archivo.name.replace(/\.[^.]+$/, '') + '.jpg',
+                                   { type: 'image/jpeg' }));
+                }, 'image/jpeg', CALIDAD);
+            };
+            /* Si el navegador no sabe decodificarla (un HEIC de iPhone en
+               Android, por ejemplo) se manda tal cual vino. */
+            img.onerror = function () { URL.revokeObjectURL(url); listo(archivo); };
+            img.src = url;
+        });
+    }
+
+    function pintarFotos() {
+        listaFotos.innerHTML = '';
+        fotos.forEach(function (f) {
+            var li = document.createElement('li');
+            li.className = 'foto-item';
+
+            var im = document.createElement('img');
+            im.src = f.url;
+            im.alt = '';
+            li.appendChild(im);
+
+            var bt = document.createElement('button');
+            bt.type = 'button';
+            bt.className = 'foto-quitar';
+            bt.setAttribute('aria-label', 'Quitar la foto ' + f.nombre);
+            bt.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" ' +
+                'stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">' +
+                '<path d="M18 6 6 18M6 6l12 12"/></svg>';
+            bt.addEventListener('click', function () { quitarFoto(f); });
+            li.appendChild(bt);
+
+            listaFotos.appendChild(li);
+        });
+    }
+
+    function quitarFoto(f) {
+        var i = fotos.indexOf(f);
+        if (i < 0) return;
+        URL.revokeObjectURL(f.url);
+        fotos.splice(i, 1);
+        pintarFotos();
+        avisar(fotos.length ? resumenFotos() : '');
+        inputFotos.focus();   /* el boton que tenia el foco ya no existe */
+    }
+
+    function agregarFotos(archivos) {
+        var nuevas = Array.prototype.slice.call(archivos).filter(function (a) {
+            return a.type.indexOf('image/') === 0;
+        });
+        if (!nuevas.length) { avisar('Solo se pueden adjuntar imágenes.', true); return; }
+
+        var lugar = MAX_FOTOS - fotos.length;
+        if (lugar <= 0) {
+            avisar('Ya llegaste al máximo de ' + MAX_FOTOS + ' fotos. Quitá alguna para sumar otra.', true);
+            return;
+        }
+        var sobran = nuevas.length - lugar;
+        nuevas = nuevas.slice(0, lugar);
+
+        avisar('Preparando las fotos…');
+        Promise.all(nuevas.map(achicar)).then(function (listas) {
+            listas.forEach(function (archivo) {
+                fotos.push({ archivo: archivo, url: URL.createObjectURL(archivo), nombre: archivo.name });
+            });
+            pintarFotos();
+            avisar(resumenFotos() + (sobran > 0
+                ? ' Se omitieron ' + sobran + ': el máximo es ' + MAX_FOTOS + '.' : ''), sobran > 0);
+        });
+    }
+
+    inputFotos.addEventListener('change', function () {
+        agregarFotos(inputFotos.files);
+        inputFotos.value = '';   /* permite volver a elegir la misma foto */
+    });
+
+    ['dragenter', 'dragover'].forEach(function (ev) {
+        zonaFotos.addEventListener(ev, function (e) {
+            e.preventDefault();
+            zonaFotos.classList.add('encima');
+        });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+        zonaFotos.addEventListener(ev, function (e) {
+            e.preventDefault();
+            zonaFotos.classList.remove('encima');
+        });
+    });
+    zonaFotos.addEventListener('drop', function (e) {
+        if (e.dataTransfer && e.dataTransfer.files.length) agregarFotos(e.dataTransfer.files);
+    });
+
+    function abrirWhatsApp(texto, faltanFotos) {
+        if (faltanFotos) {
+            avisar('Se abre WhatsApp con tu mensaje escrito. Este navegador no puede ' +
+                   'mandar las fotos solo: adjuntalas ahí con el clip. Desde el celular ' +
+                   'se envían juntas.', true);
+        }
+        window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+    }
+
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         var nombre = form.nombre.value.trim();
@@ -1892,9 +2127,31 @@
         if (form.medidas.value.trim()) lineas.push('Medidas aprox.: ' + form.medidas.value.trim());
         if (form.plazo.value)          lineas.push('Plazo: ' + form.plazo.value);
         if (form.detalle.value.trim()) lineas.push('', 'Detalle: ' + form.detalle.value.trim());
+        if (fotos.length) lineas.push('', '(' + fotos.length + ' foto' + (fotos.length !== 1 ? 's' : '') + ' adjunta' + (fotos.length !== 1 ? 's' : '') + ')');
 
-        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir' });
-        window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(lineas.join('\n')), '_blank', 'noopener');
+        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', fotos: fotos.length });
+
+        var texto = lineas.join('\n');
+
+        /* navigator.share: enviar a WhatsApp (en el celular) con archivos.
+           Web Share API existe en Android >= 5, iOS >= 13, y navegadores de
+           escritorio modernos. Si no existe, se abre wa.me con texto solo. */
+        if (fotos.length && navigator.share) {
+            var archivosShare = fotos.map(function (f) {
+                return new File([f.archivo], f.archivo.name, { type: f.archivo.type });
+            });
+            navigator.share({
+                title: 'Presupuesto - Kaiss Amoblamientos',
+                text: texto,
+                files: archivosShare,
+            }).catch(function (err) {
+                /* Si el usuario cancela Share (AbortError) no hacemos nada. Si
+                   falla por otro motivo, abrimos WhatsApp con el texto igual. */
+                if (err.name !== 'AbortError') abrirWhatsApp(texto);
+            });
+        } else {
+            abrirWhatsApp(texto, fotos.length && !navigator.share);
+        }
     });
 
     form.addEventListener('input', function (e) {
