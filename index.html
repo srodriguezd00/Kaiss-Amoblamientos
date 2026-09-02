@@ -304,14 +304,12 @@
             letter-spacing: 1px;
             margin-top: 0.5rem;
         }
-        /* El marco dorado va corrido hacia abajo y a la derecha. Se reserva ese
-           espacio con padding dentro de la columna: asi el bloque entero queda
-           alineado a la grilla en vez de sobresalir contra el borde de la
-           pantalla. El ::after ocupa exactamente el area de la imagen, corrida. */
+        /* El marco dorado va corrido hacia abajo y a la derecha. Se posiciona
+           con position: absolute desde los bordes del contenedor (inset: 0) y
+           luego se mueve con transform. El z-index: -1 lo pone atrás de la
+           imagen, así el contenedor lo recorta y no sobresale. */
         .hero-media {
             position: relative;
-            --marco: 18px;
-            padding: 0 var(--marco) var(--marco) 0;
         }
         .hero-media img {
             width: 100%;
@@ -325,10 +323,12 @@
         .hero-media::after {
             content: '';
             position: absolute;
-            inset: var(--marco) 0 0 var(--marco);
+            inset: 0;
             border: 2px solid var(--color-accent);
             border-radius: 20px;
-            z-index: 0;
+            transform: translate(18px, 18px);
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* ---------- Barra de confianza ---------- */
@@ -572,12 +572,9 @@
             color: var(--color-accent);
             flex-shrink: 0;
         }
-        /* Mismo marco corrido que en el hero, con el espacio reservado dentro
-           de la columna para no romper la alineacion con la grilla. */
+        /* Mismo patrón: marco decorativo atrás con z-index: -1. */
         .about-image {
             position: relative;
-            --marco: 15px;
-            padding: 0 var(--marco) var(--marco) 0;
         }
         .about-image img {
             width: 100%; height: auto;
@@ -590,10 +587,12 @@
         .about-image::after {
             content: '';
             position: absolute;
-            inset: var(--marco) 0 0 var(--marco);
+            inset: 0;
             border: 2px solid var(--color-accent);
             border-radius: 16px;
-            z-index: 0;
+            transform: translate(15px, 15px);
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* ---------- FAQ ---------- */
