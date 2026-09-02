@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://srodriguezd00.github.io/Kaiss-Amoblamientos/sitemap.xml

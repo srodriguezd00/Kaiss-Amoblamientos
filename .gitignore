@@ -10,3 +10,6 @@ Thumbs.db
 
 # Archivos de preview offline (no necesarios en producción)
 index_preview.html
+
+# Windows
+desktop.ini
