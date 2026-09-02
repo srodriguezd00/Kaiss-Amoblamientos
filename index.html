@@ -1536,12 +1536,14 @@
     var albumes = {
         cocinas: {
             titulo: 'Cocinas y bajo mesadas',
-            portada: 'IMG_0442.webp',
+            portada: 'cocina_verde.webp',
+            portadaW: 720,
             items: [
+                { src: 'cocina_verde.webp', w: 720, alt: 'Cocina en L a medida con bajo mesada verde agua, alacenas en madera clara y pared de ladrillo con luz LED' },
                 { src: 'IMG_0442.webp', alt: 'Cocina a medida en MDF con alacenas hasta el techo y bajo mesada oscuro' },
                 { src: 'IMG_9518.webp', alt: 'Alacena y bajo mesada a medida en una cocina de San Juan' },
                 { src: 'IMG_8397.webp', alt: 'Mueble de cocina a medida en MDF con puertas y cajones' },
-                { src: 'VID_8492.mp4', alt: 'Video recorriendo una cocina a medida terminada', poster: 'IMG_0442.webp' }
+                { src: 'VID_8492.mp4', alt: 'Video recorriendo una cocina a medida terminada', poster: 'cocina_verde.webp' }
             ]
         },
         placards: {
@@ -1571,7 +1573,8 @@
             portada: 'IMG_0691.webp',
             items: [
                 { src: 'IMG_0691.webp', alt: 'Escritorio en L a medida en MDF roble con cajonera y pared de ladrillo' },
-                { src: 'VID_7685.mp4', alt: 'Video mostrando un escritorio a medida terminado', poster: 'IMG_0691.webp' }
+                { src: 'poster_escritorio_gamer.webp', w: 720, alt: 'Escritorio gamer a medida con luz LED bajo la tapa, doble monitor y pasacables' },
+                { src: 'VID_7685.mp4', alt: 'Video mostrando un escritorio gamer a medida con iluminacion LED', poster: 'poster_escritorio_gamer.webp' }
             ]
         },
         racks: {
@@ -1615,7 +1618,7 @@
         btn.setAttribute('aria-label', 'Ver álbum: ' + alb.titulo + ', ' + etiqueta);
         btn.innerHTML =
             '<img src="' + thumb(alb.portada) + '"' +
-                 ' srcset="' + thumb(alb.portada) + ' 600w, ' + full(alb.portada) + ' 1200w"' +
+                 ' srcset="' + thumb(alb.portada) + ' 600w, ' + full(alb.portada) + ' ' + (alb.portadaW || 1200) + 'w"' +
                  ' sizes="(max-width: 420px) 92vw, (max-width: 980px) 46vw, 380px"' +
                  ' width="600" height="750" decoding="async"' +
                  (i < 2 ? '' : ' loading="lazy"') +

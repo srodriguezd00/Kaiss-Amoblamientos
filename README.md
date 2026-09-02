@@ -76,6 +76,46 @@ Descomentala y reemplazá los datos por reseñas reales de clientes. No la
 publiques con textos inventados: además de engañar al visitante, Google
 penaliza el marcado de reseñas falsas.
 
+### Comprimir un video nuevo
+
+Los videos de celular vienen a ~3,5 MB por cada 9 segundos y con una pista de
+audio que el sitio nunca reproduce (van en `muted`). Antes de subir uno:
+
+```bash
+pip install imageio-ffmpeg
+FF=$(python -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
+
+# comprimir: quita el audio, ~80 % menos de peso, sin diferencia visible
+"$FF" -i img/VID_XXXX.mp4 -an -c:v libx264 -crf 28 -preset slow \
+      -profile:v main -pix_fmt yuv420p -movflags +faststart img/VID_XXXX_web.mp4
+
+# sacar el poster (la imagen que se ve antes de darle play), del segundo 4
+"$FF" -ss 4 -i img/VID_XXXX_web.mp4 -frames:v 1 poster.png
+```
+
+Después convertí `poster.png` a WebP (full + miniatura, igual que las fotos) y
+referencialo en el álbum con `poster: 'nombre.webp'`.
+
+`-movflags +faststart` es importante: mueve el índice del archivo al principio
+para que el video empiece a reproducirse antes de terminar de descargarse.
+
+### Cambiar el dominio
+
+La URL del sitio está escrita en seis lugares (canonical, etiquetas `og:`/
+`twitter:`, los dos bloques JSON-LD, `robots.txt`, `sitemap.xml` y
+`site.webmanifest`). No puede ser una variable: los rastreadores leen esas
+etiquetas del HTML tal cual, antes de ejecutar JavaScript. Para cambiarlas
+todas de una vez:
+
+```bash
+python scripts/set-dominio.py https://kaissamoblamientos.com.ar --dry-run  # ver qué cambiaría
+python scripts/set-dominio.py https://kaissamoblamientos.com.ar            # aplicarlo
+```
+
+El script crea el archivo `CNAME` y ajusta `start_url`/`scope` del manifiesto.
+Después hay que configurarlo en **Settings → Pages → Custom domain** y reenviar
+el sitemap en Search Console.
+
 ### Cambiar el número de WhatsApp
 
 Está en dos lugares: la constante `var WA = '...'` del script y los `href` de
@@ -87,9 +127,27 @@ Está en dos lugares: la constante `var WA = '...'` del script y los `href` de
 2. **Settings → Pages → Source:** *Deploy from a branch*, rama `main`, carpeta `/ (root)`.
 3. Esperá 1-2 minutos.
 
-> Si más adelante se compra un dominio propio, hay que actualizar la URL en:
-> `<link rel="canonical">`, las etiquetas `og:`/`twitter:`, los dos bloques
-> JSON-LD, `robots.txt`, `sitemap.xml` y `site.webmanifest`.
+> Si más adelante se compra un dominio propio, no cambies las URLs a mano:
+> usá `python scripts/set-dominio.py` (ver «Cambiar el dominio» más arriba).
+
+## ✅ Pendientes del lado del negocio
+
+Cosas que no dependen del código, en orden de impacto:
+
+- [ ] **Perfil de Google Business.** Lo que más mueve la aguja en un negocio
+      local: el mapa con tres fichas aparece *arriba* de todos los resultados
+      web. Es gratis; pide verificación por correo postal, así que conviene
+      empezarlo cuanto antes.
+- [ ] **Testimonios reales.** La sección está escrita y comentada en
+      `index.html`. Hacen falta tres o cuatro frases de clientes, con nombre y
+      barrio. No la publiques con textos inventados.
+- [ ] **Dirección y horarios** en el JSON-LD (`streetAddress` y
+      `openingHoursSpecification`). Hoy declara solo ciudad y provincia.
+- [ ] **Google Search Console:** verificar el sitio y enviar `sitemap.xml`.
+- [ ] **Dos o tres fotos horizontales** con luz de día. Las 21 actuales son
+      verticales de celular y obligan a recortar fuerte en el hero y en la
+      imagen que se ve al compartir el link.
+- [ ] **Analítica** liviana y sin cookies, para saber qué CTA convierte.
 
 ## 📞 Contacto del negocio
 
