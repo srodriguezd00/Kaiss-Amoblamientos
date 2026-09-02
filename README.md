@@ -116,6 +116,40 @@ El script crea el archivo `CNAME` y ajusta `start_url`/`scope` del manifiesto.
 Después hay que configurarlo en **Settings → Pages → Custom domain** y reenviar
 el sitemap en Search Console.
 
+### Activar la analítica
+
+Los eventos **ya están cableados**, pero no hay proveedor instalado: mientras
+no lo haya, `track()` no envía nada a ningún lado (verificado: la página solo
+contacta a Google Fonts).
+
+Para activarla, descomentá una línea en el bloque `ANALITICA` del `<head>`.
+Las dos opciones son sin cookies, así que no hace falta cartel de
+consentimiento:
+
+| Proveedor | Costo | Eventos con nombre |
+|---|---|---|
+| **Umami** (recomendado) | Plan gratuito | Sí |
+| Plausible | ~10 USD/mes | Sí |
+
+> Ojo: Cloudflare Web Analytics es gratis y sin cookies, pero **solo cuenta
+> visitas**, no eventos. No serviría para saber qué CTA convierte.
+
+Eventos que se registran:
+
+| Evento | Datos |
+|---|---|
+| `cta_hero_presupuesto` · `cta_hero_trabajos` · `cta_menu_presupuesto` | — |
+| `cta_contacto_whatsapp` · `cta_contacto_instagram` | — |
+| `cta_social_whatsapp` · `cta_social_instagram` · `cta_social_facebook` | — |
+| `cta_flotante_whatsapp` | — |
+| `album_abierto` | qué álbum |
+| `cta_visor_whatsapp` | desde qué álbum |
+| `formulario_enviado` | tipo de mueble y plazo |
+
+Con eso vas a poder responder dos preguntas: **qué CTA trae más consultas** y
+**qué mueble piden más**. Para agregar un CTA nuevo alcanza con ponerle
+`data-evento="nombre"` en el HTML; el listener ya lo recoge solo.
+
 ### Cambiar el número de WhatsApp
 
 Está en dos lugares: la constante `var WA = '...'` del script y los `href` de
@@ -147,7 +181,9 @@ Cosas que no dependen del código, en orden de impacto:
 - [ ] **Dos o tres fotos horizontales** con luz de día. Las 21 actuales son
       verticales de celular y obligan a recortar fuerte en el hero y en la
       imagen que se ve al compartir el link.
-- [ ] **Analítica** liviana y sin cookies, para saber qué CTA convierte.
+- [ ] **Analítica:** crear la cuenta (Umami tiene plan gratuito) y descomentar
+      una línea en el `<head>`. El código ya está listo, ver «Activar la
+      analítica» más arriba.
 
 ## 📞 Contacto del negocio
 

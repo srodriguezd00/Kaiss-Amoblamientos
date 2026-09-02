@@ -1005,6 +1005,25 @@
         body.no-scroll { overflow: hidden; }
     </style>
 
+    <!-- ============================================================
+         ANALITICA - SIN INSTALAR
+         ------------------------------------------------------------
+         Los eventos ya estan cableados en el codigo (ver la funcion
+         `track` al final del archivo). Mientras no haya proveedor, no
+         se envia nada a ningun lado: track() no hace absolutamente nada.
+
+         Para activarla, descomenta UNA de estas lineas. Las dos son sin
+         cookies, asi que no hace falta cartel de consentimiento:
+
+         Umami (recomendado: tiene plan gratuito y eventos con nombre)
+         <script defer src="https://cloud.umami.is/script.js"
+                 data-website-id="TU-ID-ACA"></script>
+
+         Plausible (de pago, ~10 USD/mes)
+         <script defer data-domain="TU-DOMINIO"
+                 src="https://plausible.io/js/script.tagged-events.js"></script>
+         ============================================================ -->
+
     <!-- Datos estructurados: negocio local -->
     <script type="application/ld+json">
     {
@@ -1104,7 +1123,7 @@
                 <a href="#proceso">Proceso</a>
                 <a href="#nosotros">Nosotros</a>
                 <a href="#faq">Preguntas</a>
-                <a href="#presupuesto" class="btn-primary">Pedir presupuesto</a>
+                <a href="#presupuesto" class="btn-primary" data-evento="cta_menu_presupuesto">Pedir presupuesto</a>
             </nav>
         </div>
     </header>
@@ -1117,8 +1136,8 @@
                 <h1 class="fade-in">Muebles <span class="accent">a medida</span> en MDF, pensados para tu espacio</h1>
                 <p class="hero-lead fade-in">Cocinas, placards, escritorios y vanitories diseñados y fabricados a tu medida. Visita técnica, diseño 3D y presupuesto <strong>sin cargo</strong>.</p>
                 <div class="hero-buttons fade-in">
-                    <a href="#presupuesto" class="btn-primary">Pedir presupuesto gratis</a>
-                    <a href="#trabajos" class="btn-outline">Ver trabajos</a>
+                    <a href="#presupuesto" class="btn-primary" data-evento="cta_hero_presupuesto">Pedir presupuesto gratis</a>
+                    <a href="#trabajos" class="btn-outline" data-evento="cta_hero_trabajos">Ver trabajos</a>
                 </div>
                 <p class="hero-note fade-in">Respondemos por WhatsApp · Financiación con Go Cuotas</p>
                 <div class="hero-stats fade-in">
@@ -1441,23 +1460,23 @@
                 <h2>¿Listo para transformar tu espacio?</h2>
                 <p>Escribinos por WhatsApp o mirá más trabajos en Instagram. Atendemos San Juan y alrededores.</p>
                 <div class="contact-buttons">
-                    <a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20muebles%20a%20medida." target="_blank" rel="noopener" class="btn-primary btn-wa">
+                    <a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20muebles%20a%20medida." target="_blank" rel="noopener" class="btn-primary btn-wa" data-evento="cta_contacto_whatsapp">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                         Escribir por WhatsApp
                     </a>
-                    <a href="https://www.instagram.com/kaiss_amoblamientos" target="_blank" rel="noopener" class="btn-outline">
+                    <a href="https://www.instagram.com/kaiss_amoblamientos" target="_blank" rel="noopener" class="btn-outline" data-evento="cta_contacto_instagram">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                         Ver Instagram
                     </a>
                 </div>
                 <div class="contact-socials">
-                    <a href="https://wa.me/5492645413533" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp de Kaiss Amoblamientos">
+                    <a href="https://wa.me/5492645413533" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp de Kaiss Amoblamientos" data-evento="cta_social_whatsapp">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                     </a>
-                    <a href="https://www.instagram.com/kaiss_amoblamientos" target="_blank" rel="noopener" class="social-link" aria-label="Instagram de Kaiss Amoblamientos">
+                    <a href="https://www.instagram.com/kaiss_amoblamientos" target="_blank" rel="noopener" class="social-link" aria-label="Instagram de Kaiss Amoblamientos" data-evento="cta_social_instagram">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
                     </a>
-                    <a href="https://www.facebook.com/share/1Bv8Ax2yjY/" target="_blank" rel="noopener" class="social-link" aria-label="Facebook de Kaiss Amoblamientos">
+                    <a href="https://www.facebook.com/share/1Bv8Ax2yjY/" target="_blank" rel="noopener" class="social-link" aria-label="Facebook de Kaiss Amoblamientos" data-evento="cta_social_facebook">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                     </a>
                 </div>
@@ -1518,7 +1537,7 @@
 
     <aside aria-label="Acciones rápidas">
     <button class="scroll-top" id="scrollTopBtn" type="button" aria-label="Volver arriba">&#8593;</button>
-    <a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20muebles%20a%20medida." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contactar por WhatsApp">
+    <a href="https://wa.me/5492645413533?text=Hola!%20Me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20muebles%20a%20medida." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contactar por WhatsApp" data-evento="cta_flotante_whatsapp">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
     </aside>
@@ -1529,6 +1548,24 @@
 
     var WA = '5492645413533';
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------------- Analitica ----------------
+       No envia nada mientras no haya un proveedor cargado (ver el bloque
+       comentado en el <head>). Si manana se instala Umami o Plausible, los
+       eventos empiezan a llegar solos, sin tocar este archivo. */
+    function track(evento, datos) {
+        try {
+            if (window.umami && window.umami.track) { window.umami.track(evento, datos); return; }
+            if (window.plausible) { window.plausible(evento, datos ? { props: datos } : undefined); return; }
+            if (window.dataLayer) { window.dataLayer.push(Object.assign({ event: evento }, datos)); }
+        } catch (e) { /* la analitica nunca debe romper la pagina */ }
+    }
+
+    /* Los CTA estaticos se marcan con data-evento en el HTML. */
+    document.addEventListener('click', function (e) {
+        var el = e.target.closest('[data-evento]');
+        if (el) track(el.getAttribute('data-evento'));
+    });
 
     /* ---------------- Datos de los álbumes ----------------
        Para agregar una foto: copiá el archivo en img/ y una miniatura
@@ -1691,6 +1728,7 @@
         );
 
         tituloEl.textContent = albumActual.titulo;
+        track('album_abierto', { album: albumActual.titulo });
         render();
         visor.hidden = false;
         document.body.classList.add('no-scroll');
@@ -1714,6 +1752,9 @@
         render();
     }
 
+    ctaEl.addEventListener('click', function () {
+        track('cta_visor_whatsapp', { album: albumActual ? albumActual.titulo : '' });
+    });
     prevBtn.addEventListener('click', function () { mover(-1); });
     nextBtn.addEventListener('click', function () { mover(1); });
     cerrarBtn.addEventListener('click', cerrarAlbum);
@@ -1852,6 +1893,7 @@
         if (form.plazo.value)          lineas.push('Plazo: ' + form.plazo.value);
         if (form.detalle.value.trim()) lineas.push('', 'Detalle: ' + form.detalle.value.trim());
 
+        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir' });
         window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(lineas.join('\n')), '_blank', 'noopener');
     });
 
