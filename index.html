@@ -775,6 +775,210 @@
         .fotos-aviso:empty { display: none; }
         .fotos-aviso.alerta { color: #f0c07a; }
 
+        /* ---------- Medidas en tres columnas ---------- */
+        .form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+
+        /* ---------- Simulador con IA ----------
+           Bloque destacado dentro del formulario: es la funcion nueva y tiene
+           que leerse como algo aparte, no como un campo mas. */
+        .sim-bloque {
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            background: linear-gradient(160deg, #141210 0%, var(--color-bg) 70%);
+            padding: 1.4rem;
+            margin-bottom: 1.1rem;
+        }
+        .sim-encabezado { margin-bottom: 1.1rem; }
+        .sim-chip {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            border: 1px solid rgba(201, 169, 110, 0.4);
+            border-radius: 999px;
+            padding: 0.2rem 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+        .sim-encabezado h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        .sim-encabezado p {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .sim-zonas { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .sim-zonas .field { margin-bottom: 0; }
+
+        /* Las dos zonas del simulador muestran la miniatura dentro de la propia
+           caja: el cliente ve de un vistazo que subio cada cosa. */
+        .field label.dropzone-sim {
+            position: relative;
+            min-height: 132px;
+            justify-content: center;
+            padding: 0.9rem 0.6rem;
+            overflow: hidden;
+        }
+        .dropzone-sim .dz-preview {
+            position: absolute;
+            inset: 0;
+            display: block;
+        }
+        .dropzone-sim .dz-preview[hidden] { display: none; }
+        .dropzone-sim .dz-preview img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .dropzone-sim .dz-preview .foto-quitar { top: 6px; right: 6px; }
+        .dropzone-sim .dz-vacio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .field label.dropzone-sim.cargada { border-style: solid; border-color: var(--color-accent); }
+        .field label.dropzone-sim.cargada .dz-vacio { display: none; }
+        .dz-num {
+            font-size: 0.72rem;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .btn-simular {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            margin-top: 1rem;
+            padding: 0.85rem 1.2rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: 1px solid var(--color-accent);
+            background: transparent;
+            color: var(--color-accent);
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition), opacity var(--transition);
+        }
+        .btn-simular:hover:not(:disabled) { background: var(--color-accent); color: #0a0a0a; }
+        .btn-simular:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-simular.cargando { pointer-events: none; }
+        .btn-simular.cargando svg { animation: girar 1.4s linear infinite; }
+        @keyframes girar { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) {
+            .btn-simular.cargando svg { animation: none; }
+        }
+        .sim-aviso {
+            font-size: 0.78rem;
+            color: var(--color-text-muted);
+            margin: 0.6rem 0 0;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .sim-aviso:empty { display: none; }
+        .sim-aviso.alerta { color: #f0c07a; }
+
+        /* ---------- Resultado de la simulacion ---------- */
+        .sim-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(4px);
+        }
+        .sim-modal[hidden] { display: none; }
+        .sim-caja {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 18px;
+            width: min(560px, 100%);
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+        }
+        .sim-caja h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            margin-bottom: 0.3rem;
+            padding-right: 2rem;
+        }
+        .sim-caja > p.sim-sub {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1.1rem;
+            line-height: 1.55;
+        }
+        .sim-cerrar {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            width: 34px; height: 34px;
+            display: grid; place-items: center;
+            border: 0; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--color-text);
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+        .sim-cerrar:hover { background: rgba(255, 255, 255, 0.16); }
+        .sim-resultado {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            display: block;
+            background: var(--color-bg);
+        }
+        .sim-acciones {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            margin-top: 1.1rem;
+        }
+        .sim-acciones .btn-primary,
+        .sim-acciones .btn-outline { width: 100%; justify-content: center; }
+        .sim-nota {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-top: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Estado de carga dentro del modal */
+        .sim-cargando {
+            display: grid;
+            place-items: center;
+            gap: 0.9rem;
+            padding: 3.5rem 1rem;
+            text-align: center;
+        }
+        .sim-cargando[hidden] { display: none; }
+        .sim-spinner {
+            width: 44px; height: 44px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: girar 0.9s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) { .sim-spinner { animation-duration: 3s; } }
+        .sim-cargando p { font-size: 0.9rem; color: var(--color-text-muted); margin: 0; }
+        .sim-cargando .sim-paso { font-size: 0.8rem; color: var(--color-accent); }
+
         /* ---------- Contacto ---------- */
         .contact { background: var(--color-bg-alt); text-align: center; }
         .contact-box {
@@ -1038,6 +1242,10 @@
             .process-steps { grid-template-columns: 1fr; gap: 2rem; }
             .quote-form { padding: 1.5rem; }
             .form-row { grid-template-columns: 1fr; gap: 0; }
+            .form-row-3 { gap: 0.5rem; }
+            .sim-zonas { grid-template-columns: 1fr; gap: 0.9rem; }
+            .sim-bloque { padding: 1.1rem; }
+            .sim-caja { padding: 1.15rem; }
             .contact-box { padding: 2.5rem 1.5rem; }
             .contact-buttons { flex-direction: column; }
             .contact-buttons a { width: 100%; }
@@ -1474,34 +1682,86 @@
                         <p class="field-error">Elegí el tipo de mueble.</p>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row-3">
                         <div class="field">
-                            <label for="q-medidas">Medidas aprox. <span class="opt">(opcional)</span></label>
-                            <input type="text" id="q-medidas" name="medidas" placeholder="Ej: 2,40 m de ancho">
+                            <label for="q-alto">Alto <span class="opt">(cm)</span></label>
+                            <input type="number" id="q-alto" name="alto" inputmode="numeric" min="1" max="1000" placeholder="240">
                         </div>
                         <div class="field">
-                            <label for="q-plazo">¿Para cuándo? <span class="opt">(opcional)</span></label>
-                            <select id="q-plazo" name="plazo">
-                                <option value="">Sin fecha definida</option>
-                                <option>Lo antes posible</option>
-                                <option>En el próximo mes</option>
-                                <option>En 2 o 3 meses</option>
-                                <option>Solo estoy averiguando</option>
-                            </select>
+                            <label for="q-largo">Largo <span class="opt">(cm)</span></label>
+                            <input type="number" id="q-largo" name="largo" inputmode="numeric" min="1" max="1000" placeholder="180">
                         </div>
+                        <div class="field">
+                            <label for="q-ancho">Ancho <span class="opt">(cm)</span></label>
+                            <input type="number" id="q-ancho" name="ancho" inputmode="numeric" min="1" max="1000" placeholder="60">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="q-plazo">¿Para cuándo? <span class="opt">(opcional)</span></label>
+                        <select id="q-plazo" name="plazo">
+                            <option value="">Sin fecha definida</option>
+                            <option>Lo antes posible</option>
+                            <option>En el próximo mes</option>
+                            <option>En 2 o 3 meses</option>
+                            <option>Solo estoy averiguando</option>
+                        </select>
                     </div>
 
                     <div class="field">
                         <label for="q-detalle">Contanos un poco más <span class="opt">(opcional)</span></label>
-                        <textarea id="q-detalle" name="detalle" placeholder="Color, estilo, si ya tenés una idea en mente…"></textarea>
+                        <textarea id="q-detalle" name="detalle" placeholder="Color, material, estilo… Ej: melamina color nogal, tiradores negros, sin puertas arriba. La simulación también lo tiene en cuenta."></textarea>
+                    </div>
+
+                    <!-- ---------- Simulador con IA ---------- -->
+                    <div class="sim-bloque">
+                        <div class="sim-encabezado">
+                            <span class="sim-chip">Nuevo</span>
+                            <h3>Mirá cómo quedaría antes de encargarlo</h3>
+                            <p>Subí una foto del mueble que te gusta y otra del lugar donde iría. Armamos una simulación aproximada de cómo se vería en tu espacio.</p>
+                        </div>
+
+                        <div class="sim-zonas">
+                            <div class="field">
+                                <label for="q-foto-mueble">1. El mueble que te gusta</label>
+                                <input type="file" id="q-foto-mueble" accept="image/*" class="file-input">
+                                <label class="dropzone dropzone-sim" for="q-foto-mueble" id="dzMueble">
+                                    <span class="dz-preview" id="pvMueble" hidden><img alt=""><button type="button" class="foto-quitar" data-quitar="mueble" aria-label="Quitar la foto del mueble"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+                                    <span class="dz-vacio">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V9a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v11"/><path d="M2 20h20"/><path d="M7 8V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3"/><path d="M9 12h6"/></svg>
+                                        <span class="dz-titulo">Foto de la idea</span>
+                                        <span class="dz-sub">Una imagen de referencia</span>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="field">
+                                <label for="q-foto-espacio">2. Tu espacio</label>
+                                <input type="file" id="q-foto-espacio" accept="image/*" class="file-input">
+                                <label class="dropzone dropzone-sim" for="q-foto-espacio" id="dzEspacio">
+                                    <span class="dz-preview" id="pvEspacio" hidden><img alt=""><button type="button" class="foto-quitar" data-quitar="espacio" aria-label="Quitar la foto del espacio"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>
+                                    <span class="dz-vacio">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg>
+                                        <span class="dz-titulo">Foto del lugar</span>
+                                        <span class="dz-sub">Dónde iría el mueble</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-simular" id="btnSimular" disabled>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v2m0 14v2M5.6 5.6l1.4 1.4m10 10 1.4 1.4M3 12h2m14 0h2M5.6 18.4 7 17m10-10 1.4-1.4"/><circle cx="12" cy="12" r="3.5"/></svg>
+                            <span id="btnSimularTexto">Generar simulación</span>
+                        </button>
+                        <p class="sim-aviso" id="simAviso" role="status">Cargá las dos fotos para poder generar la simulación.</p>
                     </div>
 
                     <div class="field">
-                        <label for="q-fotos">Fotos del espacio <span class="opt">(opcional, hasta 4)</span></label>
+                        <label for="q-fotos">Otras fotos <span class="opt">(opcional, hasta 4)</span></label>
                         <input type="file" id="q-fotos" name="fotos" accept="image/*" multiple class="file-input">
                         <label class="dropzone" for="q-fotos" id="dropzone">
                             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-4.5-4.5L7 21"/></svg>
-                            <span class="dz-titulo">Elegí las fotos del lugar</span>
+                            <span class="dz-titulo">Sumá más fotos del lugar</span>
                             <span class="dz-sub">o arrastralas acá — nos ayuda a presupuestar mejor</span>
                         </label>
                         <ul class="fotos-lista" id="fotosLista"></ul>
@@ -1549,6 +1809,33 @@
     </section>
     </main>
 
+
+    <!-- Resultado de la simulacion con IA -->
+    <div id="simModal" class="sim-modal" role="dialog" aria-modal="true" aria-labelledby="simModalTitulo" hidden>
+        <div class="sim-caja">
+            <button type="button" class="sim-cerrar" id="simCerrar" aria-label="Cerrar la simulación">&times;</button>
+
+            <div class="sim-cargando" id="simCargando">
+                <div class="sim-spinner" aria-hidden="true"></div>
+                <p>Generando tu simulación…</p>
+                <p class="sim-paso" id="simPaso">Leyendo las fotos</p>
+            </div>
+
+            <div id="simListo" hidden>
+                <h3 id="simModalTitulo">Así podría quedar</h3>
+                <p class="sim-sub">Es una idea aproximada generada por computadora, no el diseño final. Mandanosla y la ajustamos juntos.</p>
+                <img class="sim-resultado" id="simResultado" alt="Simulación del mueble en tu espacio">
+                <div class="sim-acciones">
+                    <button type="button" class="btn-primary btn-wa" id="simEnviar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        Enviar por WhatsApp
+                    </button>
+                    <button type="button" class="btn-outline" id="simRehacer">Generar otra versión</button>
+                </div>
+                <p class="sim-nota" id="simNota"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Visor de álbumes -->
     <div id="visorAlbum" class="visor" role="dialog" aria-modal="true" aria-labelledby="visorTitulo" hidden>
@@ -2098,12 +2385,17 @@
             'Mueble: ' + tipo
         ];
         if (form.zona.value.trim())    lineas.push('Localidad: ' + form.zona.value.trim());
-        if (form.medidas.value.trim()) lineas.push('Medidas aprox.: ' + form.medidas.value.trim());
+        var med = simTextoMedidas({
+            alto:  form.alto.value.trim(),
+            largo: form.largo.value.trim(),
+            ancho: form.ancho.value.trim()
+        });
+        if (med) lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
         if (form.plazo.value)          lineas.push('Plazo: ' + form.plazo.value);
         if (form.detalle.value.trim()) lineas.push('', 'Detalle: ' + form.detalle.value.trim());
         if (fotos.length) lineas.push('', '(' + fotos.length + ' foto' + (fotos.length !== 1 ? 's' : '') + ' adjunta' + (fotos.length !== 1 ? 's' : '') + ')');
 
-        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', fotos: fotos.length });
+        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', fotos: fotos.length, simulo: !!simArchivoFinal });
 
         var texto = lineas.join('\n');
 
@@ -2132,6 +2424,388 @@
         var campo = e.target.closest('.field.invalid');
         if (campo) marcar(e.target, !e.target.value.trim());
     });
+
+    /* ================================================================
+       SIMULADOR CON IA
+       ----------------------------------------------------------------
+       El cliente sube la foto de un mueble que le gusta y una foto de su
+       espacio. Se las mandamos al proxy, que le pide a Gemini que meta el
+       mueble dentro de la foto real del ambiente. Lo que vuelve se compone
+       con la marca y las medidas encima, y eso es lo que viaja a WhatsApp.
+
+       La clave de la API NO vive aca: vive en el proxy. Ver simulador/README.
+       Mientras SIM_API este vacio, el bloque entero no se muestra.
+       ================================================================ */
+    var SIM_API = '';   /* <-- pegar aca la URL del Worker cuando este desplegado */
+
+    var SIM_LADO_MAX = 1280;   /* lo que se manda a la IA */
+    var SIM_CALIDAD  = 0.86;
+
+    var simBloque   = document.querySelector('.sim-bloque');
+    var btnSimular  = document.getElementById('btnSimular');
+    var btnSimTexto = document.getElementById('btnSimularTexto');
+    var simAviso    = document.getElementById('simAviso');
+    var simModal    = document.getElementById('simModal');
+    var simCargando = document.getElementById('simCargando');
+    var simListo    = document.getElementById('simListo');
+    var simPaso     = document.getElementById('simPaso');
+    var simImagen   = document.getElementById('simResultado');
+    var simNota     = document.getElementById('simNota');
+
+    /* Sin proxy configurado no hay simulador: se esconde y el formulario
+       sigue funcionando exactamente como antes. */
+    if (!SIM_API && simBloque) simBloque.hidden = true;
+
+    var simFotos = { mueble: null, espacio: null };
+    var simArchivoFinal = null;   /* el JPG compuesto, listo para compartir */
+
+    function simAvisar(texto, alerta) {
+        if (!simAviso) return;
+        simAviso.textContent = texto || '';
+        simAviso.classList.toggle('alerta', !!alerta);
+    }
+
+    /* Redimensiona y devuelve { blob, dataURL, ancho, alto }. */
+    function simPreparar(archivo) {
+        return new Promise(function (listo, falla) {
+            var url = URL.createObjectURL(archivo);
+            var img = new Image();
+            img.onload = function () {
+                var escala = Math.min(1, SIM_LADO_MAX / Math.max(img.width, img.height));
+                var c = document.createElement('canvas');
+                c.width  = Math.round(img.width  * escala);
+                c.height = Math.round(img.height * escala);
+                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                URL.revokeObjectURL(url);
+                listo({
+                    dataURL: c.toDataURL('image/jpeg', SIM_CALIDAD),
+                    ancho: c.width,
+                    alto: c.height
+                });
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(url);
+                falla(new Error('formato'));
+            };
+            img.src = url;
+        });
+    }
+
+    function simRefrescarBoton() {
+        if (!btnSimular) return;
+        var completo = !!(simFotos.mueble && simFotos.espacio);
+        btnSimular.disabled = !completo;
+        if (completo) simAvisar('Todo listo. Generar la simulación tarda unos 20 segundos.');
+        else simAvisar('Cargá las dos fotos para poder generar la simulación.');
+    }
+
+    function simConectarZona(clave, idInput, idZona, idPreview) {
+        var input   = document.getElementById(idInput);
+        var zona    = document.getElementById(idZona);
+        var preview = document.getElementById(idPreview);
+        if (!input || !zona || !preview) return;
+
+        var imgPreview = preview.querySelector('img');
+        var btnQuitar  = preview.querySelector('.foto-quitar');
+
+        function poner(archivo) {
+            if (!archivo || archivo.type.indexOf('image/') !== 0) {
+                simAvisar('Ese archivo no es una imagen. Probá con una foto.', true);
+                return;
+            }
+            simAvisar('Preparando la foto…');
+            simPreparar(archivo).then(function (lista) {
+                simFotos[clave] = lista;
+                imgPreview.src = lista.dataURL;
+                preview.hidden = false;
+                zona.classList.add('cargada');
+                simRefrescarBoton();
+            }).catch(function () {
+                simAvisar('No pudimos leer esa foto. Probá con otra (JPG o PNG).', true);
+            });
+        }
+
+        input.addEventListener('change', function () {
+            if (input.files && input.files[0]) poner(input.files[0]);
+            input.value = '';
+        });
+
+        btnQuitar.addEventListener('click', function (e) {
+            /* La zona es un <label>: sin esto, quitar la foto reabriria el
+               selector de archivos al instante. */
+            e.preventDefault();
+            e.stopPropagation();
+            simFotos[clave] = null;
+            imgPreview.removeAttribute('src');
+            preview.hidden = true;
+            zona.classList.remove('cargada');
+            simRefrescarBoton();
+            input.focus();
+        });
+
+        ['dragenter', 'dragover'].forEach(function (ev) {
+            zona.addEventListener(ev, function (e) { e.preventDefault(); zona.classList.add('encima'); });
+        });
+        ['dragleave', 'drop'].forEach(function (ev) {
+            zona.addEventListener(ev, function (e) { e.preventDefault(); zona.classList.remove('encima'); });
+        });
+        zona.addEventListener('drop', function (e) {
+            if (e.dataTransfer && e.dataTransfer.files.length) poner(e.dataTransfer.files[0]);
+        });
+    }
+
+    if (SIM_API) {
+        simConectarZona('mueble',  'q-foto-mueble',  'dzMueble',  'pvMueble');
+        simConectarZona('espacio', 'q-foto-espacio', 'dzEspacio', 'pvEspacio');
+    }
+
+    /* ---------- Composicion final: marca + simulacion + medidas ----------
+       La imagen que se manda a WhatsApp no es la que devuelve la IA en crudo.
+       Le ponemos una franja arriba con la marca y otra abajo con las medidas
+       y el telefono, para que la foto se explique sola cuando el cliente la
+       reenvie o la guarde. */
+    function simComponer(dataURLGenerada, datos) {
+        return new Promise(function (listo) {
+            var img = new Image();
+            img.onload = function () {
+                var W = 1080;
+                var ALTO_CABEZA = 132;
+                var altoFoto = Math.round(W * (img.height / img.width));
+                var medidas  = simTextoMedidas(datos);
+                var ALTO_PIE = medidas ? 190 : 132;
+
+                var c = document.createElement('canvas');
+                c.width  = W;
+                c.height = ALTO_CABEZA + altoFoto + ALTO_PIE;
+                var g = c.getContext('2d');
+
+                g.fillStyle = '#0a0a0a';
+                g.fillRect(0, 0, c.width, c.height);
+
+                /* Cabecera */
+                g.fillStyle = '#c9a96e';
+                g.font = '600 40px Georgia, "Times New Roman", serif';
+                g.textBaseline = 'middle';
+                g.fillText('KAISS', 56, ALTO_CABEZA / 2 - 12);
+                g.fillStyle = '#a8a8a8';
+                g.font = '400 21px system-ui, -apple-system, "Segoe UI", sans-serif';
+                g.fillText('AMOBLAMIENTOS', 56, ALTO_CABEZA / 2 + 22);
+
+                g.fillStyle = '#6f6f6f';
+                g.font = '400 19px system-ui, -apple-system, "Segoe UI", sans-serif';
+                g.textAlign = 'right';
+                g.fillText('Simulación aproximada', W - 56, ALTO_CABEZA / 2);
+                g.textAlign = 'left';
+
+                /* La simulacion */
+                g.drawImage(img, 0, ALTO_CABEZA, W, altoFoto);
+
+                /* Linea dorada de separacion */
+                g.fillStyle = '#c9a96e';
+                g.fillRect(0, ALTO_CABEZA + altoFoto, W, 3);
+
+                /* Pie */
+                var y = ALTO_CABEZA + altoFoto + 3;
+                if (medidas) {
+                    g.fillStyle = '#f5f5f5';
+                    g.font = '600 27px system-ui, -apple-system, "Segoe UI", sans-serif';
+                    g.fillText(medidas, 56, y + 44);
+                    y += 34;
+                }
+                if (datos.tipo) {
+                    g.fillStyle = '#a8a8a8';
+                    g.font = '400 22px system-ui, -apple-system, "Segoe UI", sans-serif';
+                    g.fillText(datos.tipo, 56, y + 48);
+                }
+                g.fillStyle = '#c9a96e';
+                g.font = '600 24px system-ui, -apple-system, "Segoe UI", sans-serif';
+                g.fillText('WhatsApp +54 9 264 541-3533', 56, y + 92);
+
+                c.toBlob(function (blob) {
+                    listo({
+                        blob: blob,
+                        url: URL.createObjectURL(blob),
+                        archivo: new File([blob], 'simulacion-kaiss.jpg', { type: 'image/jpeg' })
+                    });
+                }, 'image/jpeg', 0.9);
+            };
+            img.src = dataURLGenerada;
+        });
+    }
+
+    function simTextoMedidas(d) {
+        var partes = [];
+        if (d.alto)  partes.push('Alto ' + d.alto + ' cm');
+        if (d.largo) partes.push('Largo ' + d.largo + ' cm');
+        if (d.ancho) partes.push('Ancho ' + d.ancho + ' cm');
+        return partes.join('  ·  ');
+    }
+
+    /* ---------- Modal ---------- */
+    var simUltimoFoco = null;
+
+    function simAbrirModal() {
+        simUltimoFoco = document.activeElement;
+        simModal.hidden = false;
+        document.body.classList.add('no-scroll');
+        document.getElementById('simCerrar').focus();
+    }
+
+    function simCerrarModal() {
+        simModal.hidden = true;
+        document.body.classList.remove('no-scroll');
+        if (simUltimoFoco) simUltimoFoco.focus();
+    }
+
+    function simMostrarCarga() {
+        simCargando.hidden = false;
+        simListo.hidden = true;
+        var pasos = [
+            'Leyendo las fotos',
+            'Interpretando tu espacio',
+            'Ubicando el mueble',
+            'Ajustando luces y sombras',
+            'Dando los últimos retoques'
+        ];
+        var i = 0;
+        simPaso.textContent = pasos[0];
+        return setInterval(function () {
+            i = Math.min(i + 1, pasos.length - 1);
+            simPaso.textContent = pasos[i];
+        }, 4500);
+    }
+
+    /* ---------- Llamada al proxy ---------- */
+    function simPedirImagen(datos) {
+        return fetch(SIM_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        }).then(function (r) {
+            return r.json().then(function (j) {
+                if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
+                if (!j.imagen) throw new Error('respuesta vacía');
+                return j.imagen;   /* dataURL */
+            });
+        });
+    }
+
+    function simDatosFormulario() {
+        return {
+            tipo:    form.tipo.value || '',
+            alto:    (form.alto.value || '').trim(),
+            largo:   (form.largo.value || '').trim(),
+            ancho:   (form.ancho.value || '').trim(),
+            detalle: (form.detalle.value || '').trim().slice(0, 400)
+        };
+    }
+
+    function simGenerar() {
+        if (!simFotos.mueble || !simFotos.espacio) return;
+
+        var datos = simDatosFormulario();
+        btnSimular.classList.add('cargando');
+        btnSimular.disabled = true;
+        btnSimTexto.textContent = 'Generando…';
+        simAbrirModal();
+        var tic = simMostrarCarga();
+
+        track('simulacion_pedida', { mueble: datos.tipo || 'sin definir', conMedidas: !!(datos.alto || datos.largo || datos.ancho) });
+
+        simPedirImagen({
+            mueble:  simFotos.mueble.dataURL,
+            espacio: simFotos.espacio.dataURL,
+            tipo:    datos.tipo,
+            alto:    datos.alto,
+            largo:   datos.largo,
+            ancho:   datos.ancho,
+            detalle: datos.detalle
+        }).then(function (dataURL) {
+            return simComponer(dataURL, datos);
+        }).then(function (final) {
+            clearInterval(tic);
+            if (simArchivoFinal) URL.revokeObjectURL(simArchivoFinal.url);
+            simArchivoFinal = final;
+            simImagen.src = final.url;
+            simCargando.hidden = true;
+            simListo.hidden = false;
+            simNota.textContent = '';
+            track('simulacion_lista', { mueble: datos.tipo || 'sin definir' });
+        }).catch(function (err) {
+            clearInterval(tic);
+            simCerrarModal();
+            simAvisar('No pudimos generar la simulación (' + err.message + '). ' +
+                      'Podés intentar de nuevo o mandarnos las fotos igual con el botón de abajo.', true);
+            track('simulacion_error', { motivo: err.message });
+        }).then(function () {
+            btnSimular.classList.remove('cargando');
+            btnSimular.disabled = false;
+            btnSimTexto.textContent = 'Generar simulación';
+        });
+    }
+
+    /* ---------- Mandar la simulacion por WhatsApp ---------- */
+    function simEnviarWhatsApp() {
+        if (!simArchivoFinal) return;
+        var datos = simDatosFormulario();
+        var nombre = form.nombre.value.trim();
+
+        var lineas = ['Hola Kaiss! Les mando la simulación que armé en la web.'];
+        if (nombre)     lineas.push('', 'Nombre: ' + nombre);
+        if (datos.tipo) lineas.push('Mueble: ' + datos.tipo);
+        var med = simTextoMedidas(datos);
+        if (med)            lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
+        if (datos.detalle)  lineas.push('', 'Detalle: ' + datos.detalle);
+        var texto = lineas.join('\n');
+
+        track('simulacion_enviada', { mueble: datos.tipo || 'sin definir' });
+
+        var puedeCompartir = navigator.canShare &&
+            navigator.canShare({ files: [simArchivoFinal.archivo] });
+
+        if (puedeCompartir) {
+            navigator.share({
+                title: 'Simulación - Kaiss Amoblamientos',
+                text: texto,
+                files: [simArchivoFinal.archivo]
+            }).catch(function (err) {
+                if (err.name !== 'AbortError') simEnviarSinShare(texto);
+            });
+        } else {
+            simEnviarSinShare(texto);
+        }
+    }
+
+    /* En escritorio no se puede adjuntar un archivo a un enlace wa.me. Se baja
+       la imagen y se abre el chat con el texto: el cliente la arrastra ahi. */
+    function simEnviarSinShare(texto) {
+        var a = document.createElement('a');
+        a.href = simArchivoFinal.url;
+        a.download = 'simulacion-kaiss.jpg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        simNota.textContent = 'Guardamos la simulación en tus descargas y abrimos WhatsApp. ' +
+                              'Arrastrala al chat para enviárnosla. Desde el celular se manda sola.';
+        window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+    }
+
+    if (btnSimular) btnSimular.addEventListener('click', simGenerar);
+    if (simModal) {
+        document.getElementById('simCerrar').addEventListener('click', simCerrarModal);
+        document.getElementById('simEnviar').addEventListener('click', simEnviarWhatsApp);
+        document.getElementById('simRehacer').addEventListener('click', function () {
+            simCerrarModal();
+            simGenerar();
+        });
+        simModal.addEventListener('click', function (e) {
+            if (e.target === simModal) simCerrarModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !simModal.hidden) simCerrarModal();
+        });
+    }
 
     /* ---------------- Año del footer ---------------- */
     document.getElementById('year').textContent = new Date().getFullYear();
