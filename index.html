@@ -2445,7 +2445,7 @@
        la pantalla, pero en vez de llamar a la IA devuelve la misma foto del
        espacio. No gasta un centavo de credito. Es solo para revisar el diseño.
        ================================================================ */
-    var SIM_API = '';   /* <-- pegar aca la URL del Worker cuando este desplegado */
+    var SIM_API = 'https://kaiss-simulador.srodriguezd00.workers.dev';   /* Worker desplegado en Cloudflare */
 
     var SIM_LOCAL = ['localhost', '127.0.0.1', ''].indexOf(location.hostname) !== -1;
     var SIM_DEMO  = SIM_LOCAL && !SIM_API;   /* demo solo mientras no haya Worker */
