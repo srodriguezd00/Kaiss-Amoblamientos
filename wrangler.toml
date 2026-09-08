@@ -17,7 +17,19 @@ compatibility_date = "2026-09-07"
 # (Settings -> Variables and Secrets). Los secrets sobreviven a los deploys.
 [vars]
 ORIGENES = "https://srodriguezd00.github.io,http://localhost:8000,http://127.0.0.1:8000"
-MODELO = "gemini-3.1-flash-image"
+
+# PRUEBA EN CURSO: se esta midiendo si un modelo mas barato aguanta la
+# composicion con el prompt actual. Precio por imagen a 1K:
+#
+#   gemini-3.1-flash-image        0.067   Nano Banana 2, el que venia andando
+#   gemini-2.5-flash-image        0.039   Nano Banana 1
+#   gemini-3.1-flash-lite-image   0.0336  Lite  <-- probando este
+#
+# El Lite es el mas barato, pero la doc avisa que no esta optimizado para
+# multiples imagenes de referencia, que es justo lo que hace el simulador. Si la
+# composicion sale mal, el siguiente a probar es gemini-2.5-flash-image, y si ese
+# tampoco, se vuelve a gemini-3.1-flash-image.
+MODELO = "gemini-3.1-flash-lite-image"
 
 # Los logs quedan prendidos. Van aca porque lo que se activa a mano en el panel
 # lo apaga el deploy siguiente. Son los que muestran el error real de Gemini
