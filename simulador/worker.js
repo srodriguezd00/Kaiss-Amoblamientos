@@ -20,7 +20,7 @@ const ORIGENES_POR_DEFECTO = [
   'http://127.0.0.1:8000',
 ];
 
-const MODELO_POR_DEFECTO = 'gemini-3.1-flash-image';
+const MODELO_POR_DEFECTO = 'gemini-2.5-flash-image';
 
 /* Tope de tamano del cuerpo. Dos fotos de 1280px en JPEG base64 entran
    holgadas en 8 MB; mas que eso es alguien probando de romper algo. */
@@ -171,21 +171,17 @@ function armarPrompt(d) {
   ].filter(Boolean).join(', ');
 
   let p =
-    'Tu tarea: Realiza una composición visual profesional.\n\n' +
-    'INPUTS:\n' +
-    'Imagen 1: Foto de un mueble de referencia\n' +
-    'Imagen 2: Foto del espacio real donde irá instalado\n\n' +
-    'TAREA ESPECÍFICA:\n' +
-    'Edita la Imagen 2 para AGREGAR el mueble de la Imagen 1 DENTRO del espacio.\n' +
-    'El resultado debe verse como una foto real del mueble YA INSTALADO en ese lugar.\n\n' +
-    'RESTRICCIONES CRÍTICAS:\n' +
-    '✓ COPIA el diseño, forma, color y materiales del mueble de Imagen 1\n' +
-    '✓ INSERTA el mueble DENTRO del espacio de Imagen 2\n' +
-    '✓ Mantén intactos: paredes, piso, ventanas, iluminación, ángulo de cámara de Imagen 2\n' +
-    '✓ Escala, sombras y perspectiva fotorrealistas\n' +
-    '✓ NO agregues texto, marcas de agua, cotas ni personas\n' +
-    '✓ RESULTADO: UNA SOLA IMAGEN con el espacio + el mueble insertado\n\n' +
-    'FUNDAMENTAL: Debes usar AMBAS imágenes. Es una composición, no una copia de una.\n';
+    'Tienes 2 imágenes:\n' +
+    '- Imagen 1: Un mueble (escritorio, silla, etc.)\n' +
+    '- Imagen 2: Una habitación vacía\n\n' +
+    'TAREA: Inserta el mueble de Imagen 1 DENTRO de la habitación de Imagen 2.\n' +
+    'Haz que parezca una foto real del mueble ya instalado en ese espacio.\n\n' +
+    'Importante:\n' +
+    '- Usa el estilo y color del mueble de Imagen 1\n' +
+    '- No cambies las paredes, piso o luz de Imagen 2\n' +
+    '- Ajusta la escala y perspectiva para que sea realista\n' +
+    '- Resultado: UNA imagen con ambos elementos combinados\n' +
+    '- Sin texto ni marcas de agua\n';
 
   if (tipo) p += `\nTipo de mueble: ${tipo}.`;
   if (medidas) p += `\nMedidas del mueble: ${medidas}.`;
