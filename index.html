@@ -2408,32 +2408,16 @@
         if (med) lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
         if (form.plazo.value)          lineas.push('Plazo: ' + form.plazo.value);
         if (form.detalle.value.trim()) lineas.push('', 'Detalle: ' + form.detalle.value.trim());
-        var fotosCuenta = fotos && fotos.length ? fotos.length : 0;
-        if (fotosCuenta) lineas.push('', '(' + fotosCuenta + ' foto' + (fotosCuenta !== 1 ? 's' : '') + ' adjunta' + (fotosCuenta !== 1 ? 's' : '') + ')');
+        if (simArchivoFinal) lineas.push('', '(va la simulación que armé en la web)');
 
-        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', fotos: fotosCuenta, simulo: !!simArchivoFinal });
+        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', simulo: !!simArchivoFinal });
 
         var texto = lineas.join('\n');
 
-        /* navigator.share: enviar a WhatsApp (en el celular) con archivos.
-           Web Share API existe en Android >= 5, iOS >= 13, y navegadores de
-           escritorio modernos. Si no existe, se abre wa.me con texto solo. */
-        if (fotosCuenta && navigator.share && fotos) {
-            var archivosShare = fotos.map(function (f) {
-                return new File([f.archivo], f.archivo.name, { type: f.archivo.type });
-            });
-            navigator.share({
-                title: 'Presupuesto - Kaiss Amoblamientos',
-                text: texto,
-                files: archivosShare,
-            }).catch(function (err) {
-                /* Si el usuario cancela Share (AbortError) no hacemos nada. Si
-                   falla por otro motivo, abrimos WhatsApp con el texto igual. */
-                if (err.name !== 'AbortError') abrirWhatsApp(texto);
-            });
-        } else {
-            abrirWhatsApp(texto, fotosCuenta && !navigator.share);
-        }
+        /* Si ya se genero una simulacion, viaja con el mensaje: antes se perdia
+           aca, el formulario mandaba solo texto aunque la imagen existiera. El
+           aviso va al cartel del simulador, que esta justo arriba del boton. */
+        mandarPorWhatsApp(texto, function (aviso) { simAvisar(aviso, true); });
     });
 
     form.addEventListener('input', function (e) {
@@ -2688,11 +2672,17 @@
                 g.fillText('WhatsApp +54 9 264 541-3533', 56, y + 92);
 
                 c.toBlob(function (blob) {
-                    listo({
-                        blob: blob,
-                        url: URL.createObjectURL(blob),
-                        archivo: new File([blob], 'simulacion-kaiss.jpg', { type: 'image/jpeg' })
-                    });
+                    /* Segunda copia en PNG, solo para el portapapeles: Chrome no
+                       acepta JPEG dentro de un ClipboardItem. La que se manda y
+                       se descarga sigue siendo la JPEG, que pesa mucho menos. */
+                    c.toBlob(function (blobPng) {
+                        listo({
+                            blob: blob,
+                            blobPng: blobPng,
+                            url: URL.createObjectURL(blob),
+                            archivo: new File([blob], 'simulacion-kaiss.jpg', { type: 'image/jpeg' })
+                        });
+                    }, 'image/png');
                 }, 'image/jpeg', 0.9);
             };
             img.src = dataURLGenerada;
@@ -2838,38 +2828,67 @@
 
         track('simulacion_enviada', { mueble: datos.tipo || 'sin definir' });
 
-        var puedeCompartir = navigator.canShare &&
-            navigator.canShare({ files: [simArchivoFinal.archivo] });
+        mandarPorWhatsApp(texto, function (aviso) { simNota.textContent = aviso; });
+    }
 
-        if (puedeCompartir) {
+    /* ---------- Envio a WhatsApp con la simulacion ----------
+       Un enlace wa.me solo puede llevar texto: WhatsApp no acepta archivos por
+       URL, no hay parametro que valga. La unica via para que la imagen viaje
+       pegada al mensaje es navigator.share con archivos, que en el celular abre
+       WhatsApp con las dos cosas juntas.
+
+       En escritorio esa API casi nunca acepta archivos, asi que se hace lo
+       mejor disponible: dejar la imagen en el portapapeles para que entre con
+       un Ctrl+V en el chat, y de paso bajarla al disco por si el navegador
+       bloqueo el portapapeles. */
+    function mandarPorWhatsApp(texto, avisar) {
+        var final = simArchivoFinal;
+        if (!final) { abrirWhatsApp(texto); return; }
+
+        if (navigator.canShare && navigator.canShare({ files: [final.archivo] })) {
             navigator.share({
                 title: 'Simulación - Kaiss Amoblamientos',
                 text: texto,
-                files: [simArchivoFinal.archivo]
+                files: [final.archivo]
             }).catch(function (err) {
-                if (err.name !== 'AbortError') simEnviarSinShare(texto);
+                /* Si el usuario cancela no hacemos nada; si falla por otro
+                   motivo, queda el camino de escritorio. */
+                if (err.name !== 'AbortError') conImagenAparte(texto, final, avisar);
             });
-        } else {
-            simEnviarSinShare(texto);
+            return;
         }
+        conImagenAparte(texto, final, avisar);
     }
 
-    /* En escritorio no se puede adjuntar un archivo a un enlace wa.me. Se baja
-       la imagen y se abre el chat con el texto: el cliente la arrastra ahi. */
-    function simEnviarSinShare(texto) {
-        if (!simArchivoFinal) return;
+    function conImagenAparte(texto, final, avisar) {
         var a = document.createElement('a');
-        a.href = simArchivoFinal.url;
+        a.href = final.url;
         a.download = 'simulacion-kaiss.jpg';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
 
-        simNota.textContent = 'Guardamos la simulación en tus descargas y abrimos WhatsApp. ' +
-                              'Arrastrala al chat para enviárnosla. Desde el celular se manda sola.';
-        setTimeout(function () {
-            window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
-        }, 300);
+        /* El portapapeles pide permiso y ademas exige que la pagina tenga el
+           foco, por eso se copia ANTES de abrir la pestaña de WhatsApp. Si
+           falla no pasa nada: la descarga ya esta hecha y el aviso lo dice. */
+        var copiado = false;
+        var copiar;
+        try {
+            copiar = navigator.clipboard.write([
+                new ClipboardItem({ 'image/png': final.blobPng })
+            ]).then(function () { copiado = true; }, function () {});
+        } catch (e) {
+            copiar = Promise.resolve();
+        }
+
+        copiar.then(function () {
+            avisar(copiado
+                ? 'Copiamos la simulación: pegala en el chat con Ctrl+V. También quedó en tus ' +
+                  'descargas. Desde el celular se manda sola.'
+                : 'Guardamos la simulación en tus descargas: arrastrala al chat para enviárnosla. ' +
+                  'Desde el celular se manda sola.');
+            abrirWhatsApp(texto);
+        });
     }
 
     if (btnSimular) btnSimular.addEventListener('click', simGenerar);
