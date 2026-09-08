@@ -2797,7 +2797,7 @@
                 ? 'MODO DEMO: esta no es una imagen generada por la IA, es tu misma foto del ' +
                   'espacio. Sirve para revisar el diseño. Con el Worker desplegado, acá aparece ' +
                   'el mueble ya colocado en el ambiente.'
-                : '';
+                : avisoEnvio();
             track('simulacion_lista', { mueble: datos.tipo || 'sin definir' });
         }).catch(function (err) {
             clearInterval(tic);
@@ -2851,6 +2851,17 @@
             return navigator.userAgentData.mobile;
         }
         return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    /* Lo que va a pasar al tocar enviar, dicho ANTES de tocarlo. En la compu la
+       imagen no puede viajar dentro del enlace y hay que pegarla a mano:
+       enterarse recien con WhatsApp abierto es tarde. Al enviar, este mismo
+       cartel se reemplaza por lo que efectivamente paso. En el celular no se
+       dice nada porque no hay ningun paso extra que anticipar. */
+    function avisoEnvio() {
+        if (esCelular()) return '';
+        return 'Al enviar copiamos la simulación para que la pegues en el chat con Ctrl+V. ' +
+               'Desde el celular se manda sola.';
     }
 
     function mandarPorWhatsApp(texto, avisar) {
