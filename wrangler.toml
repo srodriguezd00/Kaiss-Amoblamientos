@@ -18,3 +18,12 @@ compatibility_date = "2026-09-07"
 [vars]
 ORIGENES = "https://srodriguezd00.github.io,http://localhost:8000,http://127.0.0.1:8000"
 MODELO = "gemini-3.1-flash-image"
+
+# Los logs quedan prendidos. Van aca porque lo que se activa a mano en el panel
+# lo apaga el deploy siguiente. Son los que muestran el error real de Gemini
+# cuando una simulacion falla (el console.error del Worker).
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true
