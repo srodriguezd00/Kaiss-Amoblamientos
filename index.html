@@ -877,6 +877,26 @@
         @media (prefers-reduced-motion: reduce) {
             .btn-simular.cargando svg { animation: none; }
         }
+        /* Secundario respecto de "Generar simulacion": reabre lo que ya esta
+           hecho y no gasta credito, asi que va sin borde ni fondo para que no
+           compita con el boton que si llama a la IA. */
+        .btn-ver-sim {
+            display: block;
+            width: 100%;
+            margin-top: 0.55rem;
+            padding: 0.5rem;
+            background: none;
+            border: 0;
+            font-family: inherit;
+            font-size: 0.82rem;
+            color: var(--color-accent);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+        .btn-ver-sim:hover { color: var(--color-accent-hover); }
+        /* display:block pisa el [hidden] del reset, hay que reponerlo. */
+        .btn-ver-sim[hidden] { display: none; }
         .sim-aviso {
             font-size: 0.78rem;
             color: var(--color-text-muted);
@@ -1769,14 +1789,18 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v2m0 14v2M5.6 5.6l1.4 1.4m10 10 1.4 1.4M3 12h2m14 0h2M5.6 18.4 7 17m10-10 1.4-1.4"/><circle cx="12" cy="12" r="3.5"/></svg>
                             <span id="btnSimularTexto">Generar simulación</span>
                         </button>
+                        <!-- Aparece recien cuando hay una simulacion hecha. Reabre
+                             la que ya esta en memoria: sin esto, cerrar el modal
+                             obligaba a regenerar, y cada regeneracion se paga. -->
+                        <button type="button" class="btn-ver-sim" id="btnVerSim" hidden>Ver la simulación que generaste</button>
                         <p class="sim-aviso" id="simAviso" role="status">Cargá las dos fotos para poder generar la simulación.</p>
                     </div>
 
                     <button type="submit" class="btn-primary btn-wa">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        Enviar por WhatsApp
+                        Pedir presupuesto
                     </button>
-                    <p class="form-hint">Se abre WhatsApp con el mensaje ya escrito. Este sitio no guarda tus datos.</p>
+                    <p class="form-hint" id="formHint">Se abre WhatsApp con el mensaje ya escrito. Este sitio no guarda tus datos.</p>
                 </form>
             </div>
         </div>
@@ -1837,7 +1861,7 @@
                 <div class="sim-acciones">
                     <button type="button" class="btn-primary btn-wa" id="simEnviar">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        Enviar por WhatsApp
+                        Mandar esta simulación
                     </button>
                     <button type="button" class="btn-outline" id="simRehacer">Generar otra versión</button>
                 </div>
@@ -2414,16 +2438,15 @@
         if (med) lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
         if (form.plazo.value)          lineas.push('Plazo: ' + form.plazo.value);
         if (form.detalle.value.trim()) lineas.push('', 'Detalle: ' + form.detalle.value.trim());
-        if (simArchivoFinal) lineas.push('', '(va la simulación que armé en la web)');
-
         track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', simulo: !!simArchivoFinal });
 
         var texto = lineas.join('\n');
 
-        /* Si ya se genero una simulacion, viaja con el mensaje: antes se perdia
-           aca, el formulario mandaba solo texto aunque la imagen existiera. El
-           aviso va al cartel del simulador, que esta justo arriba del boton. */
-        mandarPorWhatsApp(texto, function (aviso) { simAvisar(aviso, true); });
+        /* Solo texto, a proposito: este boton pide presupuesto y el del modal
+           manda la simulacion. Cada uno hace una cosa sola. De paso evita que
+           viaje una imagen vieja cuando el cliente cambio el mueble o las
+           medidas despues de haberla generado. */
+        abrirWhatsApp(texto);
     });
 
     form.addEventListener('input', function (e) {
@@ -2466,6 +2489,8 @@
     var simPaso     = document.getElementById('simPaso');
     var simImagen   = document.getElementById('simResultado');
     var simNota     = document.getElementById('simNota');
+    var btnVerSim   = document.getElementById('btnVerSim');
+    var formHint    = document.getElementById('formHint');
 
     /* Sin proxy y fuera de la compu no hay simulador: se esconde y el
        formulario sigue funcionando exactamente como antes. */
@@ -2703,6 +2728,18 @@
         return partes.join('  ·  ');
     }
 
+    /* Con una simulacion hecha aparecen dos caminos que antes no existian, y el
+       boton verde manda solo texto: hay que decir donde quedo la imagen para que
+       nadie la de por enviada, y hay que poder volver a verla sin regenerarla,
+       porque cada regeneracion se paga. */
+    function simMarcarDisponible() {
+        if (btnVerSim) btnVerSim.hidden = false;
+        if (formHint) {
+            formHint.textContent = 'Se abre WhatsApp con tu consulta. La simulación se manda ' +
+                                   'aparte, con el botón del recuadro de arriba.';
+        }
+    }
+
     /* ---------- Modal ---------- */
     var simUltimoFoco = null;
 
@@ -2796,6 +2833,7 @@
             clearInterval(tic);
             if (simArchivoFinal) URL.revokeObjectURL(simArchivoFinal.url);
             simArchivoFinal = final;
+            simMarcarDisponible();
             simImagen.src = final.url;
             simCargando.hidden = true;
             simListo.hidden = false;
@@ -2824,12 +2862,16 @@
         var datos = simDatosFormulario();
         var nombre = form.nombre.value.trim();
 
+        /* Lleva los mismos datos que el boton de presupuesto: este mensaje no es
+           una version recortada del otro, es el mismo mas la imagen. */
         var lineas = ['Hola Kaiss! Les mando la simulación que armé en la web.'];
-        if (nombre)     lineas.push('', 'Nombre: ' + nombre);
-        if (datos.tipo) lineas.push('Mueble: ' + datos.tipo);
+        if (nombre)                 lineas.push('', 'Nombre: ' + nombre);
+        if (datos.tipo)             lineas.push('Mueble: ' + datos.tipo);
+        if (form.zona.value.trim()) lineas.push('Localidad: ' + form.zona.value.trim());
         var med = simTextoMedidas(datos);
-        if (med)            lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
-        if (datos.detalle)  lineas.push('', 'Detalle: ' + datos.detalle);
+        if (med)                    lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
+        if (form.plazo.value)       lineas.push('Plazo: ' + form.plazo.value);
+        if (datos.detalle)          lineas.push('', 'Detalle: ' + datos.detalle);
         var texto = lineas.join('\n');
 
         track('simulacion_enviada', { mueble: datos.tipo || 'sin definir' });
@@ -2921,6 +2963,17 @@
     }
 
     if (btnSimular) btnSimular.addEventListener('click', simGenerar);
+
+    /* Reabre la simulacion que ya esta en memoria. No vuelve a llamar a la IA:
+       es la alternativa gratis a "Generar otra versión". */
+    if (btnVerSim) {
+        btnVerSim.addEventListener('click', function () {
+            if (!simArchivoFinal) return;
+            simCargando.hidden = true;
+            simListo.hidden = false;
+            simAbrirModal();
+        });
+    }
     if (simModal) {
         document.getElementById('simCerrar').addEventListener('click', simCerrarModal);
         document.getElementById('simEnviar').addEventListener('click', simEnviarWhatsApp);
