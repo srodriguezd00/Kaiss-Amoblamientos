@@ -984,6 +984,32 @@
         }
         .sim-acciones .btn-primary,
         .sim-acciones .btn-outline { width: 100%; justify-content: center; }
+        /* Miniaturas de las versiones generadas en la visita. */
+        .sim-tiras {
+            list-style: none;
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.7rem 0 0;
+            padding: 0;
+        }
+        .sim-tiras[hidden] { display: none; }
+        .sim-tira { flex: 1; min-width: 0; }
+        .sim-tira button {
+            display: block;
+            width: 100%;
+            padding: 0;
+            aspect-ratio: 3 / 4;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--color-bg);
+            cursor: pointer;
+            transition: border-color var(--transition);
+        }
+        .sim-tira img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .sim-tira button:hover { border-color: var(--color-text-muted); }
+        .sim-tira button[aria-current="true"] { border-color: var(--color-accent); }
+
         .sim-nota {
             font-size: 0.75rem;
             color: var(--color-text-muted);
@@ -1858,6 +1884,10 @@
                 <h3 id="simModalTitulo">Así podría quedar</h3>
                 <p class="sim-sub">Es una idea aproximada generada por computadora, no el diseño final. Mandanosla y la ajustamos juntos.</p>
                 <img class="sim-resultado" id="simResultado" alt="Simulación del mueble en tu espacio">
+                <!-- Todas las versiones generadas en esta visita, para poder volver
+                     a una anterior y mandar esa. Aparece recien con la segunda:
+                     con una sola no hay nada entre que elegir. -->
+                <ul class="sim-tiras" id="simTiras" hidden></ul>
                 <!-- Va ANTES de los botones a proposito: con una foto vertical,
                      debajo caia fuera de pantalla y habia que scrollear para
                      enterarse del Ctrl+V, o sea despues de haber apretado. -->
@@ -2495,6 +2525,8 @@
     var simNota     = document.getElementById('simNota');
     var btnVerSim   = document.getElementById('btnVerSim');
     var formHint    = document.getElementById('formHint');
+    var simTiras    = document.getElementById('simTiras');
+    var btnRehacer  = document.getElementById('simRehacer');
 
     /* Sin proxy y fuera de la compu no hay simulador: se esconde y el
        formulario sigue funcionando exactamente como antes. */
@@ -2508,7 +2540,31 @@
     }
 
     var simFotos = { mueble: null, espacio: null };
-    var simArchivoFinal = null;   /* el JPG compuesto, listo para compartir */
+    var simArchivoFinal = null;   /* la version que se esta mirando ahora */
+    var simHechas = [];           /* todas las de esta visita, sin pisarse */
+    var simIndice = -1;
+
+    /* ---------- Tope diario ----------
+       El limite de verdad lo pone el Worker: esto se saltea con una ventana de
+       incognito y no es una defensa. Existe para que el cliente vea cuantas le
+       quedan ANTES de apretar, en vez de comerse un error del servidor. */
+    var SIM_TOPE_DIA = 4;
+
+    function simHoy() { return new Date().toISOString().slice(0, 10); }
+
+    function simUsadasHoy() {
+        try {
+            var g = JSON.parse(localStorage.getItem('kaiss-sim') || '{}');
+            return g.dia === simHoy() ? (g.n || 0) : 0;
+        } catch (e) { return 0; }
+    }
+
+    function simSumarUso() {
+        try {
+            localStorage.setItem('kaiss-sim',
+                JSON.stringify({ dia: simHoy(), n: simUsadasHoy() + 1 }));
+        } catch (e) { /* sin localStorage el Worker lo frena igual */ }
+    }
 
     function simAvisar(texto, alerta) {
         if (!simAviso) return;
@@ -2576,10 +2632,25 @@
 
     function simRefrescarBoton() {
         if (!btnSimular) return;
+        var quedan = SIM_TOPE_DIA - simUsadasHoy();
+
+        if (quedan <= 0) {
+            btnSimular.disabled = true;
+            simAvisar('Llegaste a las ' + SIM_TOPE_DIA + ' simulaciones de hoy. Mandanos la ' +
+                      'consulta por WhatsApp y la vemos juntos, o probá mañana.', true);
+            return;
+        }
+
         var completo = !!(simFotos.mueble && simFotos.espacio);
         btnSimular.disabled = !completo;
-        if (completo) simAvisar('Todo listo. Generar la simulación tarda unos 20 segundos.');
-        else simAvisar('Cargá las dos fotos para poder generar la simulación.');
+        if (!completo) {
+            simAvisar('Cargá las dos fotos para poder generar la simulación.');
+            return;
+        }
+        /* El resto solo cuando quedan pocas: avisar "te quedan 4" de entrada
+           suena a advertencia y nadie iba a hacer cuatro igual. */
+        simAvisar('Todo listo. Generar la simulación tarda unos 20 segundos.' +
+                  (quedan <= 2 ? ' Te ' + (quedan === 1 ? 'queda 1' : 'quedan ' + quedan) + ' hoy.' : ''));
     }
 
     function simConectarZona(clave, idInput, idZona, idPreview) {
@@ -2640,6 +2711,9 @@
     if (SIM_API || SIM_DEMO) {
         simConectarZona('mueble',  'q-foto-mueble',  'dzMueble',  'pvMueble');
         simConectarZona('espacio', 'q-foto-espacio', 'dzEspacio', 'pvEspacio');
+        /* Al entrar, por si ya gasto el cupo del dia en una visita anterior: sin
+           esto se enteraria recien despues de subir las dos fotos. */
+        simRefrescarBoton();
     }
 
     /* ---------- Composicion final: marca + simulacion + medidas ----------
@@ -2732,6 +2806,43 @@
         return partes.join('  ·  ');
     }
 
+    /* ---------- Las versiones generadas ----------
+       No se pisan: se guardan todas las de la visita para poder volver a una
+       anterior y mandar esa. Por eso tampoco se revoca la URL de la anterior al
+       generar una nueva, como se hacia antes. */
+    function simElegir(i) {
+        if (i < 0 || i >= simHechas.length) return;
+        simIndice = i;
+        simArchivoFinal = simHechas[i];
+        simImagen.src = simArchivoFinal.url;
+        simPintarTiras();
+    }
+
+    function simPintarTiras() {
+        if (!simTiras) return;
+        /* Con una sola version no hay nada entre que elegir. */
+        simTiras.hidden = simHechas.length < 2;
+        simTiras.innerHTML = '';
+        simHechas.forEach(function (hecha, i) {
+            var li = document.createElement('li');
+            li.className = 'sim-tira';
+
+            var bt = document.createElement('button');
+            bt.type = 'button';
+            bt.setAttribute('aria-label', 'Ver la versión ' + (i + 1) + ' de ' + simHechas.length);
+            if (i === simIndice) bt.setAttribute('aria-current', 'true');
+            bt.addEventListener('click', function () { simElegir(i); });
+
+            var im = document.createElement('img');
+            im.src = hecha.url;
+            im.alt = '';
+            bt.appendChild(im);
+
+            li.appendChild(bt);
+            simTiras.appendChild(li);
+        });
+    }
+
     /* Con una simulacion hecha aparecen dos caminos que antes no existian, y el
        boton verde manda solo texto: hay que decir donde quedo la imagen para que
        nadie la de por enviada, y hay que poder volver a verla sin regenerarla,
@@ -2811,8 +2922,17 @@
         };
     }
 
+    function simRefrescarRehacer() {
+        if (!btnRehacer) return;
+        var sinCupo = simUsadasHoy() >= SIM_TOPE_DIA;
+        btnRehacer.disabled = sinCupo;
+        btnRehacer.textContent = sinCupo ? 'Llegaste al máximo de hoy' : 'Generar otra versión';
+    }
+
     function simGenerar() {
         if (!simFotos.mueble || !simFotos.espacio) return;
+        /* Tambien frena a "Generar otra versión", que llama aca directo. */
+        if (simUsadasHoy() >= SIM_TOPE_DIA) { simRefrescarBoton(); simRefrescarRehacer(); return; }
 
         var datos = simDatosFormulario();
         btnSimular.classList.add('cargando');
@@ -2835,10 +2955,13 @@
             return simComponer(dataURL, datos);
         }).then(function (final) {
             clearInterval(tic);
-            if (simArchivoFinal) URL.revokeObjectURL(simArchivoFinal.url);
-            simArchivoFinal = final;
+            /* Se cuenta el uso recien ahora: una generacion que fallo no le
+               gasta el cupo al cliente. */
+            simSumarUso();
+            simHechas.push(final);
+            simElegir(simHechas.length - 1);
             simMarcarDisponible();
-            simImagen.src = final.url;
+            simRefrescarRehacer();
             simCargando.hidden = true;
             simListo.hidden = false;
             simNota.textContent = SIM_DEMO
@@ -2855,8 +2978,9 @@
             track('simulacion_error', { motivo: err.message });
         }).then(function () {
             btnSimular.classList.remove('cargando');
-            btnSimular.disabled = false;
             btnSimTexto.textContent = 'Generar simulación';
+            /* No se reactiva a ciegas: simRefrescarBoton respeta el tope diario. */
+            simRefrescarBoton();
         });
     }
 
