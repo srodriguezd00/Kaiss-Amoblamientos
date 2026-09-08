@@ -16,6 +16,9 @@
  *
  * ORIGENES y MODELO viven en wrangler.toml, no en el panel: lo que diga el
  * archivo pisa lo que haya cargado a mano en cada deploy.
+ *
+ * Ademas usa un namespace de KV (binding LIMITES) para contar el uso y no
+ * gastar de mas. Ver la seccion "Limites" mas abajo.
  */
 
 const ORIGENES_POR_DEFECTO = [
@@ -82,6 +85,10 @@ export default {
       return json({ error: 'Faltan las fotos o no son imágenes válidas' }, 400, cors);
     }
 
+    /* Ultimo control antes de gastar plata. */
+    const frenado = await revisarLimite(env, request);
+    if (frenado) return json({ error: frenado }, 429, cors);
+
     const modelo = env.MODELO || MODELO_POR_DEFECTO;
     const url =
       `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`;
@@ -140,6 +147,67 @@ export default {
     return json({ imagen }, 200, cors);
   },
 };
+
+/* ---------------- Limites ----------------
+   Dos contadores en KV. El de la IP frena a una persona insistiendo. El global
+   es un cortacircuitos contra un script que rote IPs: esta puesto muy por
+   encima del trafico real (60 al dia son unas 15 personas distintas) para que
+   ningun cliente legitimo se lo cruce nunca. Si algun dia lo toca trafico de
+   verdad, hay que subirlo, no bajarlo.
+
+   Se cuenta el intento y no el exito: si algo falla despues, el cliente pierde
+   un cupo. Es a proposito, porque una llamada que llego a Gemini puede haberse
+   cobrado igual, y el objetivo de esto es no gastar de mas.
+
+   KV es de consistencia eventual: con pedidos simultaneos algun contador puede
+   quedar corto. No importa, esto es una red de contencion y no una barrera
+   exacta; el techo duro es el tope de gasto configurado en Google. */
+const TOPE_IP = 4;
+const TOPE_DIA = 60;
+const VIDA_CONTADOR = 60 * 60 * 48;   /* 48 h: los de ayer se borran solos */
+
+async function revisarLimite(env, request) {
+  /* Sin el binding se deja pasar: dejar el simulador tirado por una config que
+     falta es peor que quedarse sin este control, y el tope de Google sigue
+     siendo el techo. Queda el grito en los logs. */
+  if (!env.LIMITES) {
+    console.error('KV LIMITES sin configurar: las simulaciones pasan sin control');
+    return null;
+  }
+
+  const dia = new Date().toISOString().slice(0, 10);
+  const ip = request.headers.get('CF-Connecting-IP') || 'sin-ip';
+  /* La IP no se guarda en crudo: alcanza con su hash para contar. */
+  const claveIp = `ip:${await hashCorto(ip)}:${dia}`;
+  const claveDia = `g:${dia}`;
+
+  const [usosIp, usosDia] = await Promise.all([
+    env.LIMITES.get(claveIp),
+    env.LIMITES.get(claveDia),
+  ]);
+
+  if (Number(usosIp || 0) >= TOPE_IP) {
+    return `Ya hiciste ${TOPE_IP} simulaciones hoy. Mandanos la consulta por WhatsApp y la vemos juntos.`;
+  }
+  if (Number(usosDia || 0) >= TOPE_DIA) {
+    console.error('Tope diario global alcanzado:', TOPE_DIA);
+    return 'El simulador está al límite por hoy. Escribinos por WhatsApp y lo vemos igual.';
+  }
+
+  await Promise.all([
+    env.LIMITES.put(claveIp, String(Number(usosIp || 0) + 1), { expirationTtl: VIDA_CONTADOR }),
+    env.LIMITES.put(claveDia, String(Number(usosDia || 0) + 1), { expirationTtl: VIDA_CONTADOR }),
+  ]);
+  return null;
+}
+
+async function hashCorto(texto) {
+  const datos = new TextEncoder().encode(texto);
+  const resumen = await crypto.subtle.digest('SHA-256', datos);
+  return [...new Uint8Array(resumen)].slice(0, 8)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
 
 /* ---------------- Auxiliares ---------------- */
 

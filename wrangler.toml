@@ -18,18 +18,25 @@ compatibility_date = "2026-09-07"
 [vars]
 ORIGENES = "https://srodriguezd00.github.io,http://localhost:8000,http://127.0.0.1:8000"
 
-# PRUEBA EN CURSO: se esta midiendo si un modelo mas barato aguanta la
-# composicion con el prompt actual. Precio por imagen a 1K:
+# Precio por imagen a 1K, para cuando haya que revisarlo:
 #
-#   gemini-3.1-flash-image        0.067   Nano Banana 2, el que venia andando
+#   gemini-3.1-flash-lite-image   0.0336  Lite  <-- el que usamos
 #   gemini-2.5-flash-image        0.039   Nano Banana 1
-#   gemini-3.1-flash-lite-image   0.0336  Lite  <-- probando este
+#   gemini-3.1-flash-image        0.067   Nano Banana 2
+#   gemini-3-pro-image            0.134   Pro
 #
-# El Lite es el mas barato, pero la doc avisa que no esta optimizado para
-# multiples imagenes de referencia, que es justo lo que hace el simulador. Si la
-# composicion sale mal, el siguiente a probar es gemini-2.5-flash-image, y si ese
-# tampoco, se vuelve a gemini-3.1-flash-image.
+# Se eligio el Lite despues de probarlo: la doc avisa que no esta optimizado
+# para multiples imagenes de referencia, que es justo lo que hace el simulador,
+# pero en la practica compone bien y respeta el espacio. No se justifica pagar
+# el doble por Nano Banana 2. Si algun dia la calidad no alcanza, subir un
+# escalon en esta lista.
 MODELO = "gemini-3.1-flash-lite-image"
+
+# Donde se guardan los contadores de uso (4 por IP y 60 por dia, ver worker.js).
+# El namespace se crea una vez a mano en el panel: Storage & Databases -> KV.
+[[kv_namespaces]]
+binding = "LIMITES"
+id = "8933c05f516446038d9339b0c82eee98"
 
 # Los logs quedan prendidos. Van aca porque lo que se activa a mano en el panel
 # lo apaga el deploy siguiente. Son los que muestran el error real de Gemini
