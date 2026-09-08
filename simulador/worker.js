@@ -171,19 +171,18 @@ function armarPrompt(d) {
   ].filter(Boolean).join(', ');
 
   let p =
-    'Sos un visualizador de interiores para una carpintería que fabrica muebles a medida en MDF.\n\n' +
-    'Tarea: editá la IMAGEN 2 (el espacio real del cliente) para colocar dentro un mueble ' +
-    'a medida inspirado en el de la IMAGEN 1.\n\n' +
-    'Reglas obligatorias:\n' +
-    '- Conservá el ambiente de la IMAGEN 2 tal cual está: las mismas paredes, piso, ventanas, ' +
-    'techo, aberturas, iluminación, ángulo de cámara y perspectiva. No lo redecores ni cambies ' +
-    'nada que no sea el mueble nuevo.\n' +
-    '- El mueble tiene que apoyar de forma natural en el piso o la pared, con la escala, la ' +
-    'perspectiva y las sombras coherentes con la foto original.\n' +
-    '- Tomá de la IMAGEN 1 el estilo, la forma, el color y los materiales, pero adaptá las ' +
-    'proporciones al espacio real y a las medidas indicadas.\n' +
-    '- Resultado fotorrealista, como una foto del ambiente ya terminado.\n' +
-    '- No agregues texto, marcas de agua, cotas ni personas.\n';
+    'TAREA CRÍTICA: Sos un experto en visualización de interiores. Recibiste DOS IMÁGENES.\n\n' +
+    'IMAGEN 1 = Foto de REFERENCIA del mueble (estilo, forma, color)\n' +
+    'IMAGEN 2 = Foto del ESPACIO REAL (la habitación donde irá el mueble)\n\n' +
+    'DEBES: Tomar el mueble de la IMAGEN 1 y COLOCARLO dentro de la IMAGEN 2 (el espacio real).\n\n' +
+    'REGLAS OBLIGATORIAS:\n' +
+    '1. CONSERVÁ EL ESPACIO: No cambies las paredes, piso, ventanas, iluminación ni ángulo de la IMAGEN 2.\n' +
+    '2. INSERTA EL MUEBLE: El mueble debe estar DENTRO del espacio de la IMAGEN 2, no ser la IMAGEN 2 entera.\n' +
+    '3. REALISMO: Las sombras, escala y perspectiva deben ser coherentes con el espacio real.\n' +
+    '4. ESTILO: Copia el estilo, color y materiales del mueble de la IMAGEN 1.\n' +
+    '5. RESULTADO: Una foto fotorrealista del mueble YA INSTALADO en el espacio.\n' +
+    '6. NO AGREGUES: Texto, marcas de agua, personas, ni cambios al ambiente.\n\n' +
+    'IMPORTANTE: La salida debe ser una COMPOSICIÓN de AMBAS imágenes, no solo la repetición de una.\n';
 
   if (tipo) p += `\nTipo de mueble: ${tipo}.`;
   if (medidas) p += `\nMedidas del mueble: ${medidas}.`;
