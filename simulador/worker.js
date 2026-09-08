@@ -171,18 +171,21 @@ function armarPrompt(d) {
   ].filter(Boolean).join(', ');
 
   let p =
-    'TAREA CRÍTICA: Sos un experto en visualización de interiores. Recibiste DOS IMÁGENES.\n\n' +
-    'IMAGEN 1 = Foto de REFERENCIA del mueble (estilo, forma, color)\n' +
-    'IMAGEN 2 = Foto del ESPACIO REAL (la habitación donde irá el mueble)\n\n' +
-    'DEBES: Tomar el mueble de la IMAGEN 1 y COLOCARLO dentro de la IMAGEN 2 (el espacio real).\n\n' +
-    'REGLAS OBLIGATORIAS:\n' +
-    '1. CONSERVÁ EL ESPACIO: No cambies las paredes, piso, ventanas, iluminación ni ángulo de la IMAGEN 2.\n' +
-    '2. INSERTA EL MUEBLE: El mueble debe estar DENTRO del espacio de la IMAGEN 2, no ser la IMAGEN 2 entera.\n' +
-    '3. REALISMO: Las sombras, escala y perspectiva deben ser coherentes con el espacio real.\n' +
-    '4. ESTILO: Copia el estilo, color y materiales del mueble de la IMAGEN 1.\n' +
-    '5. RESULTADO: Una foto fotorrealista del mueble YA INSTALADO en el espacio.\n' +
-    '6. NO AGREGUES: Texto, marcas de agua, personas, ni cambios al ambiente.\n\n' +
-    'IMPORTANTE: La salida debe ser una COMPOSICIÓN de AMBAS imágenes, no solo la repetición de una.\n';
+    'Tu tarea: Realiza una composición visual profesional.\n\n' +
+    'INPUTS:\n' +
+    'Imagen 1: Foto de un mueble de referencia\n' +
+    'Imagen 2: Foto del espacio real donde irá instalado\n\n' +
+    'TAREA ESPECÍFICA:\n' +
+    'Edita la Imagen 2 para AGREGAR el mueble de la Imagen 1 DENTRO del espacio.\n' +
+    'El resultado debe verse como una foto real del mueble YA INSTALADO en ese lugar.\n\n' +
+    'RESTRICCIONES CRÍTICAS:\n' +
+    '✓ COPIA el diseño, forma, color y materiales del mueble de Imagen 1\n' +
+    '✓ INSERTA el mueble DENTRO del espacio de Imagen 2\n' +
+    '✓ Mantén intactos: paredes, piso, ventanas, iluminación, ángulo de cámara de Imagen 2\n' +
+    '✓ Escala, sombras y perspectiva fotorrealistas\n' +
+    '✓ NO agregues texto, marcas de agua, cotas ni personas\n' +
+    '✓ RESULTADO: UNA SOLA IMAGEN con el espacio + el mueble insertado\n\n' +
+    'FUNDAMENTAL: Debes usar AMBAS imágenes. Es una composición, no una copia de una.\n';
 
   if (tipo) p += `\nTipo de mueble: ${tipo}.`;
   if (medidas) p += `\nMedidas del mueble: ${medidas}.`;
