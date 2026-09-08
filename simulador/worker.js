@@ -186,17 +186,45 @@ function armarPrompt(d) {
     'intacta: lo único que se agrega es un mueble.\n\n' +
     'Imagen 1: el mueble de referencia. Se usa SOLO para copiarle el diseño.\n' +
     'Imagen 2: el espacio real. Es la base del resultado y no se rediseña.\n\n' +
+
+    /* Sin la ultima linea la orden es imposible de cumplir: si el mueble no
+       entra en el encuadre, lo unico que puede hacer el modelo es alejar la
+       camara. Hay que darle la salida buena. */
+    'EL ENCUADRE NO SE TOCA:\n' +
+    '- Mismo recorte, mismo zoom, mismo punto de vista. No alejes la cámara.\n' +
+    '- No muestres pared, piso ni techo que no estén en la Imagen 2.\n' +
+    '- Si el mueble no entra completo en ese encuadre, mostralo cortado por el borde, ' +
+    'como saldría en una foto real. Nunca abras el plano para que quepa.\n\n' +
+
     'LO QUE NO PUEDE CAMBIAR de la Imagen 2:\n' +
     '- Las ventanas, puertas y aberturas quedan del mismo lado y del mismo tamaño.\n' +
     '- El piso conserva su material, color y dirección.\n' +
     '- Las paredes y el techo conservan su color y su textura.\n' +
-    '- El ángulo de cámara y la perspectiva son los mismos.\n' +
     '- La luz entra desde donde entraba, con la misma temperatura y las mismas sombras.\n' +
     '- Todo lo que ya está en la escena se queda donde está.\n\n' +
-    'LO QUE SE AGREGA:\n' +
-    'Un mueble apoyado de forma natural en el piso o la pared, con la forma, el diseño y ' +
-    'los materiales del de la Imagen 1, en escala coherente con el ambiente y con sombras ' +
-    'que acompañen la luz que la foto ya tiene.\n\n' +
+
+    'EL MUEBLE QUE SE AGREGA:\n' +
+    '- Es un mueble A MEDIDA, fabricado para ese espacio exacto: tiene que verse ajustado ' +
+    'a la pared o al rincón, aprovechando el ancho disponible. No un mueble suelto de ' +
+    'tienda apoyado en el medio del ambiente.\n' +
+    '- Es íntegramente de MDF: estructura, patas, paneles y frentes. Nada de metal, ni ' +
+    'patas metálicas, ni estructuras de caño, ni vidrio. Si el mueble de la Imagen 1 ' +
+    'tiene partes metálicas, rehacelas en MDF: en esto la Imagen 1 no manda.\n' +
+    '- De la Imagen 1 copiá únicamente el mueble: su forma, su estructura y sus materiales ' +
+    'de madera. NO traigas nada de las paredes de la Imagen 1: ni cuadros, ni estantes ' +
+    'colgantes, ni plantas, ni carteles, ni tableros perforados.\n' +
+    '- Podés apoyar sobre el mueble unos pocos objetos de uso acordes a su tipo, para que ' +
+    'no se vea vacío, pero el protagonista es el mueble.\n' +
+    '- Apoyado de forma natural en el piso o la pared, con sombras que acompañen la luz ' +
+    'que la foto ya tiene.\n\n' +
+
+    /* Las medidas solas no le dicen nada: necesita contra que compararlas, y en
+       la foto ya hay objetos de tamaño conocido. */
+    'ESCALA:\n' +
+    'Usá como referencia lo que ya está en la foto (la altura del zócalo, el tamaño de las ' +
+    'baldosas, el marco de la ventana, la altura de la llave de luz) para que el mueble ' +
+    'tenga el tamaño real que le corresponde según las medidas indicadas.\n\n' +
+
     'El resultado es la MISMA foto de la Imagen 2 con el mueble adentro, como si se la ' +
     'hubiera sacado después de instalarlo. No es un ambiente nuevo ni uno parecido.\n' +
     'Sin texto, marcas de agua, cotas ni personas.\n';

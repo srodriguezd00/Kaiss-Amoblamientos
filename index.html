@@ -1754,7 +1754,7 @@
                         <div class="sim-encabezado">
                             <span class="sim-chip">Nuevo</span>
                             <h3>Mirá cómo quedaría antes de encargarlo</h3>
-                            <p>Subí una foto del mueble que te gusta y otra del lugar donde iría. Armamos una simulación aproximada de cómo se vería en tu espacio.</p>
+                            <p>Subí una foto del mueble que te gusta y otra del lugar donde iría. Armamos una simulación aproximada de cómo se vería en tu espacio. <strong>Para el lugar, alejate unos pasos:</strong> si la foto es muy de cerca, el mueble no entra y la simulación sale mal.</p>
                         </div>
 
                         <div class="sim-zonas">
@@ -1779,7 +1779,11 @@
                                     <span class="dz-vacio">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg>
                                         <span class="dz-titulo">Foto del lugar</span>
-                                        <span class="dz-sub">Dónde iría el mueble</span>
+                                        <!-- La consigna vieja ("Donde iria el mueble") invitaba a
+                                             sacar un primer plano del rincon, y en un encuadre asi
+                                             no entra un mueble: el modelo se ve obligado a alejar
+                                             la camara e inventar pared. -->
+                                        <span class="dz-sub">Alejate y que entre toda la pared</span>
                                     </span>
                                 </label>
                             </div>
