@@ -20,7 +20,7 @@ const ORIGENES_POR_DEFECTO = [
   'http://127.0.0.1:8000',
 ];
 
-const MODELO_POR_DEFECTO = 'gemini-2.0-pro-vision';
+const MODELO_POR_DEFECTO = 'gemini-3.8-flash';
 
 /* Tope de tamano del cuerpo. Dos fotos de 1280px en JPEG base64 entran
    holgadas en 8 MB; mas que eso es alguien probando de romper algo. */
