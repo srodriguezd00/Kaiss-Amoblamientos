@@ -8,10 +8,14 @@
  * y no lo manda el cliente: si lo mandara el navegador, cualquiera podria
  * usar la clave para generar lo que quiera y pagarias vos la cuenta.
  *
- * Variables de entorno (Settings -> Variables and Secrets):
- *   GEMINI_API_KEY  (Secret)   la clave de Google AI Studio
+ * Variables de entorno:
+ *   GEMINI_API_KEY  (Secret)   la clave de Google AI Studio. Se carga a mano en
+ *                              el panel: Settings -> Variables and Secrets.
  *   ORIGENES        (Text)     dominios permitidos, separados por coma
- *   MODELO          (Text)     opcional, por defecto gemini-2.5-flash-image
+ *   MODELO          (Text)     que modelo de Gemini usar
+ *
+ * ORIGENES y MODELO viven en wrangler.toml, no en el panel: lo que diga el
+ * archivo pisa lo que haya cargado a mano en cada deploy.
  */
 
 const ORIGENES_POR_DEFECTO = [
@@ -20,7 +24,10 @@ const ORIGENES_POR_DEFECTO = [
   'http://127.0.0.1:8000',
 ];
 
-const MODELO_POR_DEFECTO = 'gemini-2.5-flash-image';
+/* Nano Banana 2: es el que mejor sostiene la coherencia cuando entran varias
+   imagenes de referencia, que es justo lo que hace el simulador. El valor real
+   sale de la variable MODELO (ver wrangler.toml); esto es solo el respaldo. */
+const MODELO_POR_DEFECTO = 'gemini-3.1-flash-image';
 
 /* Tope de tamano del cuerpo. Dos fotos de 1280px en JPEG base64 entran
    holgadas en 8 MB; mas que eso es alguien probando de romper algo. */

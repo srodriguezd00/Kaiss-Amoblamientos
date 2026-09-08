@@ -1,0 +1,20 @@
+# Configuracion del Worker del simulador.
+#
+# Sin este archivo, Cloudflare mira la raiz del repo, encuentra index.html y
+# publica TODO como sitio estatico, borrando el Worker. Aca le decimos cual es
+# el archivo que tiene que ejecutar y no declaramos ningun directorio de
+# assets, asi el deploy toca solo el Worker y no el sitio de GitHub Pages.
+
+name = "kaiss-simulador"
+main = "simulador/worker.js"
+compatibility_date = "2026-09-07"
+
+# Variables en texto plano. Van aca y no en el panel para que queden
+# versionadas: si manana cambia el modelo, se cambia en este archivo y el
+# deploy lo aplica solo.
+#
+# GEMINI_API_KEY NO va aca: es un secret y se carga desde el panel
+# (Settings -> Variables and Secrets). Los secrets sobreviven a los deploys.
+[vars]
+ORIGENES = "https://srodriguezd00.github.io,http://localhost:8000,http://127.0.0.1:8000"
+MODELO = "gemini-3.1-flash-image"
