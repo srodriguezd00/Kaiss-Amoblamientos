@@ -2837,15 +2837,27 @@
        pegada al mensaje es navigator.share con archivos, que en el celular abre
        WhatsApp con las dos cosas juntas.
 
-       En escritorio esa API casi nunca acepta archivos, asi que se hace lo
-       mejor disponible: dejar la imagen en el portapapeles para que entre con
-       un Ctrl+V en el chat, y de paso bajarla al disco por si el navegador
-       bloqueo el portapapeles. */
+       En escritorio no hay forma de que la imagen viaje con el mensaje (ver
+       esCelular abajo), asi que se hace lo mejor disponible: dejarla en el
+       portapapeles para que entre con un Ctrl+V en el chat, y de paso bajarla
+       al disco por si el navegador bloqueo el portapapeles. */
+    /* Chrome en Windows 11 acepta compartir archivos, asi que navigator.share
+       se activa igual que en el celular, pero abre el panel de Compartir del
+       sistema, y WhatsApp no se registra ahi: la lista trae Paint, Outlook,
+       Teams y nada que sirva. Por eso el share queda reservado al celular, que
+       es donde el panel si abre WhatsApp con el mensaje y la foto juntos. */
+    function esCelular() {
+        if (navigator.userAgentData && typeof navigator.userAgentData.mobile === 'boolean') {
+            return navigator.userAgentData.mobile;
+        }
+        return /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     function mandarPorWhatsApp(texto, avisar) {
         var final = simArchivoFinal;
         if (!final) { abrirWhatsApp(texto); return; }
 
-        if (navigator.canShare && navigator.canShare({ files: [final.archivo] })) {
+        if (esCelular() && navigator.canShare && navigator.canShare({ files: [final.archivo] })) {
             navigator.share({
                 title: 'Simulación - Kaiss Amoblamientos',
                 text: texto,
