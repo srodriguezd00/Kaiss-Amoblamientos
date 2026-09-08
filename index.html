@@ -2566,6 +2566,18 @@
         } catch (e) { /* sin localStorage el Worker lo frena igual */ }
     }
 
+    /* El servidor manda: si dice que no queda cupo, el navegador se alinea
+       aunque su propia cuenta diga otra cosa. Los dos contadores se desfasan
+       cuando una generacion falla despues de haber llegado a Gemini: el del
+       servidor la cuenta y el del navegador no. */
+    function simMarcarSinCupo() {
+        try {
+            localStorage.setItem('kaiss-sim', JSON.stringify({ dia: simHoy(), n: SIM_TOPE_DIA }));
+        } catch (e) { /* sin localStorage no hay nada que alinear */ }
+        simRefrescarBoton();
+        simRefrescarRehacer();
+    }
+
     function simAvisar(texto, alerta) {
         if (!simAviso) return;
         simAviso.textContent = texto || '';
@@ -2905,6 +2917,13 @@
             body: JSON.stringify(datos)
         }).then(function (r) {
             return r.json().then(function (j) {
+                /* El tope se marca aparte: no es un error del que se pueda
+                   reintentar y no va envuelto en el mensaje generico. */
+                if (r.status === 429) {
+                    var tope = new Error(j.error || 'Llegaste al límite de simulaciones por hoy.');
+                    tope.esTope = true;
+                    throw tope;
+                }
                 if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
                 if (!j.imagen) throw new Error('respuesta vacía');
                 return j.imagen;   /* dataURL */
@@ -2973,9 +2992,22 @@
         }).catch(function (err) {
             clearInterval(tic);
             simCerrarModal();
-            simAvisar('No pudimos generar la simulación (' + err.message + '). ' +
-                      'Podés intentar de nuevo o mandarnos las fotos igual con el botón de abajo.', true);
-            track('simulacion_error', { motivo: err.message });
+            if (err.esTope) {
+                /* El mensaje del servidor ya dice que hacer. Agregarle "probá de
+                   nuevo" seria mentirle al cliente. */
+                simAvisar(err.message, true);
+                simMarcarSinCupo();
+            } else {
+                simAvisar('No pudimos generar la simulación (' + err.message + '). ' +
+                          'Podés intentar de nuevo o mandarnos las fotos igual con el botón de abajo.', true);
+            }
+            /* Al cerrarse el modal el cartel queda en el formulario, que puede
+               estar fuera de pantalla: sin esto el cliente ve que se cierra todo
+               y ningun motivo. */
+            if (simBloque) {
+                simBloque.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+            }
+            track('simulacion_error', { motivo: err.esTope ? 'tope' : err.message });
         }).then(function () {
             btnSimular.classList.remove('cargando');
             btnSimTexto.textContent = 'Generar simulación';
@@ -3106,6 +3138,10 @@
         document.getElementById('simCerrar').addEventListener('click', simCerrarModal);
         document.getElementById('simEnviar').addEventListener('click', simEnviarWhatsApp);
         document.getElementById('simRehacer').addEventListener('click', function () {
+            /* Sin cupo no se cierra el modal: cerrarlo sin explicar nada es
+               justamente lo que confundia. El boton ya quedo deshabilitado y
+               con el texto del tope. */
+            if (simUsadasHoy() >= SIM_TOPE_DIA) { simRefrescarRehacer(); return; }
             simCerrarModal();
             simGenerar();
         });
