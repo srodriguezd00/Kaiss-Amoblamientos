@@ -2237,13 +2237,21 @@
     var LADO_MAX  = 1600;
     var CALIDAD   = 0.82;
 
+    /* Sistema de fotos adjuntas: estos elementos no están en el HTML actual */
     var inputFotos = document.getElementById('q-fotos');
     var listaFotos = document.getElementById('fotosLista');
     var avisoFotos = document.getElementById('fotosAviso');
     var zonaFotos  = document.getElementById('dropzone');
     var fotos = [];
 
+    /* Solo ejecutar si los elementos existen */
+    if (!inputFotos || !listaFotos || !avisoFotos || !zonaFotos) {
+        inputFotos = null; listaFotos = null; avisoFotos = null; zonaFotos = null;
+        fotos = null;
+    }
+
     function avisar(texto, alerta) {
+        if (!avisoFotos) return;
         avisoFotos.textContent = texto || '';
         avisoFotos.classList.toggle('alerta', !!alerta);
     }
@@ -2337,26 +2345,30 @@
         });
     }
 
-    inputFotos.addEventListener('change', function () {
-        agregarFotos(inputFotos.files);
-        inputFotos.value = '';   /* permite volver a elegir la misma foto */
-    });
+    if (inputFotos) {
+        inputFotos.addEventListener('change', function () {
+            agregarFotos(inputFotos.files);
+            inputFotos.value = '';   /* permite volver a elegir la misma foto */
+        });
+    }
 
-    ['dragenter', 'dragover'].forEach(function (ev) {
-        zonaFotos.addEventListener(ev, function (e) {
-            e.preventDefault();
-            zonaFotos.classList.add('encima');
+    if (zonaFotos) {
+        ['dragenter', 'dragover'].forEach(function (ev) {
+            zonaFotos.addEventListener(ev, function (e) {
+                e.preventDefault();
+                zonaFotos.classList.add('encima');
+            });
         });
-    });
-    ['dragleave', 'drop'].forEach(function (ev) {
-        zonaFotos.addEventListener(ev, function (e) {
-            e.preventDefault();
-            zonaFotos.classList.remove('encima');
+        ['dragleave', 'drop'].forEach(function (ev) {
+            zonaFotos.addEventListener(ev, function (e) {
+                e.preventDefault();
+                zonaFotos.classList.remove('encima');
+            });
         });
-    });
-    zonaFotos.addEventListener('drop', function (e) {
-        if (e.dataTransfer && e.dataTransfer.files.length) agregarFotos(e.dataTransfer.files);
-    });
+        zonaFotos.addEventListener('drop', function (e) {
+            if (e.dataTransfer && e.dataTransfer.files.length) agregarFotos(e.dataTransfer.files);
+        });
+    }
 
     function abrirWhatsApp(texto, faltanFotos) {
         if (faltanFotos) {
@@ -2396,16 +2408,17 @@
         if (med) lineas.push('Medidas: ' + med.replace(/\s+·\s+/g, ', '));
         if (form.plazo.value)          lineas.push('Plazo: ' + form.plazo.value);
         if (form.detalle.value.trim()) lineas.push('', 'Detalle: ' + form.detalle.value.trim());
-        if (fotos.length) lineas.push('', '(' + fotos.length + ' foto' + (fotos.length !== 1 ? 's' : '') + ' adjunta' + (fotos.length !== 1 ? 's' : '') + ')');
+        var fotosCuenta = fotos && fotos.length ? fotos.length : 0;
+        if (fotosCuenta) lineas.push('', '(' + fotosCuenta + ' foto' + (fotosCuenta !== 1 ? 's' : '') + ' adjunta' + (fotosCuenta !== 1 ? 's' : '') + ')');
 
-        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', fotos: fotos.length, simulo: !!simArchivoFinal });
+        track('formulario_enviado', { mueble: tipo, plazo: form.plazo.value || 'sin definir', fotos: fotosCuenta, simulo: !!simArchivoFinal });
 
         var texto = lineas.join('\n');
 
         /* navigator.share: enviar a WhatsApp (en el celular) con archivos.
            Web Share API existe en Android >= 5, iOS >= 13, y navegadores de
            escritorio modernos. Si no existe, se abre wa.me con texto solo. */
-        if (fotos.length && navigator.share) {
+        if (fotosCuenta && navigator.share && fotos) {
             var archivosShare = fotos.map(function (f) {
                 return new File([f.archivo], f.archivo.name, { type: f.archivo.type });
             });
@@ -2419,7 +2432,7 @@
                 if (err.name !== 'AbortError') abrirWhatsApp(texto);
             });
         } else {
-            abrirWhatsApp(texto, fotos.length && !navigator.share);
+            abrirWhatsApp(texto, fotosCuenta && !navigator.share);
         }
     });
 
@@ -2489,23 +2502,55 @@
         return new Promise(function (listo, falla) {
             var url = URL.createObjectURL(archivo);
             var img = new Image();
+            var timeout = null;
+            var completado = false;
+
+            function limpiar() {
+                if (timeout) clearTimeout(timeout);
+                if (url) URL.revokeObjectURL(url);
+            }
+
             img.onload = function () {
-                var escala = Math.min(1, SIM_LADO_MAX / Math.max(img.width, img.height));
-                var c = document.createElement('canvas');
-                c.width  = Math.round(img.width  * escala);
-                c.height = Math.round(img.height * escala);
-                c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-                URL.revokeObjectURL(url);
-                listo({
-                    dataURL: c.toDataURL('image/jpeg', SIM_CALIDAD),
-                    ancho: c.width,
-                    alto: c.height
-                });
+                if (completado) return;
+                completado = true;
+                try {
+                    var escala = Math.min(1, SIM_LADO_MAX / Math.max(img.width, img.height));
+                    var c = document.createElement('canvas');
+                    c.width  = Math.round(img.width  * escala);
+                    c.height = Math.round(img.height * escala);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    limpiar();
+                    listo({
+                        dataURL: c.toDataURL('image/jpeg', SIM_CALIDAD),
+                        ancho: c.width,
+                        alto: c.height
+                    });
+                } catch (e) {
+                    limpiar();
+                    falla(new Error('No pudimos procesar la imagen. Probá con otro archivo.'));
+                }
             };
             img.onerror = function () {
-                URL.revokeObjectURL(url);
+                if (completado) return;
+                completado = true;
+                limpiar();
                 falla(new Error('formato'));
             };
+            img.onabort = function () {
+                if (completado) return;
+                completado = true;
+                limpiar();
+                falla(new Error('Se canceló la carga de la imagen'));
+            };
+
+            timeout = setTimeout(function () {
+                if (completado) return;
+                completado = true;
+                img.src = '';
+                limpiar();
+                falla(new Error('La carga de la imagen tardó demasiado'));
+            }, 10000);
+
             img.src = url;
         });
     }
